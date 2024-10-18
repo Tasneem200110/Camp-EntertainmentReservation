@@ -26,7 +26,9 @@ namespace DAL.Entities
         public int CampID { get; set; }
         public User User { get; set; }
         public Camp camp { get; set; }
-        public Payment payment { get; set; }
+
+        public int PaymentId { get; set; }
+        public Payment Payment { get; set; }
 
     }
     public class BookingDateValidation : ValidationAttribute

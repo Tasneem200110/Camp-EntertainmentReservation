@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DAL.Data.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,17 +17,23 @@ namespace DAL.Entities
         [StringLength(100, ErrorMessage = "Camp name cannot be longer than 100 characters.")]
         public string CampName { get; set; }
 
-        [Required]
-        [StringLength(200, ErrorMessage = "Location cannot be longer than 200 characters.")]
-        public string Location { get; set; }
+        //[Required]
+        //[StringLength(200, ErrorMessage = "Location cannot be longer than 200 characters.")]
+        //public string Location { get; set; }
 
         [Required]
         [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
         public string Description { get; set; }
+        public CampCategory CampCategory { get; set; }
+        public string? Image { get; set; }
 
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price per night must be non-negative.")]
         public decimal PricePerNight { get; set; }
+
+        [Required]
+        public int AddressId { get; set; }
+        public Address Address { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
