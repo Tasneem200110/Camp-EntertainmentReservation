@@ -24,7 +24,7 @@ namespace DAL.Migrations
                 name: "AddressId",
                 table: "Camps",
                 type: "int",
-                nullable: false,
+                nullable: true,
                 defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(

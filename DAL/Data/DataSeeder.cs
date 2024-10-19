@@ -21,7 +21,8 @@ namespace DAL.Data
                     new Address { Government = "Cairo", City = "Nasr City", District = "7th District" },
                     new Address { Government = "Giza", City = "Dokki", District = "Tahrir Street" },
                     new Address { Government = "Cairo", City = "Maadi", District = "Corniche" },
-                    new Address { Government = "Giza", City = "Sheikh Zayed", District = "Zayed Central" }
+                    new Address { Government = "Giza", City = "Sheikh Zayed", District = "Zayed Central" },
+                    new Address { Government = "Red Sea", City = "Hurghada"}
                 };
                 context.Addresses.AddRange(addresses);
                 context.SaveChanges();
@@ -30,6 +31,17 @@ namespace DAL.Data
             {
                 var camps = new List<Camp>
                 {
+                    new Camp()
+                    {
+                        CampName = "Gifton Island",
+                        Description = "Giftun Island is one of the top destination island in Hurghada. Set your spirit free and enjoy amazing snorkeling experience to discover the wonderful underwater world around the island.",
+                        CampCategory = CampCategory.Nature,
+                        Image = "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/2e/40/58/giftun-islands-red-sea.jpg?w=1200&h=-1&s=1",
+                        PricePerNight = 250.00M,
+                        AddressId = 5,
+                        AvailabilityStartDate = DateTime.Now,
+                        AvailabilityEndDate = DateTime.Now.AddMonths(6),
+                    },
                     new Camp()
                     {
                         CampName = "Nile Adventure Park",

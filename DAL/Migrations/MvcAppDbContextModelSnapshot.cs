@@ -42,7 +42,7 @@ namespace DAL.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Booking", b =>
@@ -74,7 +74,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Camp", b =>
@@ -117,7 +117,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Camps");
+                    b.ToTable("Camps", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Payment", b =>
@@ -150,7 +150,7 @@ namespace DAL.Migrations
                     b.HasIndex("BookingID")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
@@ -185,7 +185,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("DAL.Entities.Booking", b =>

@@ -17,10 +17,6 @@ namespace DAL.Entities
         [StringLength(100, ErrorMessage = "Camp name cannot be longer than 100 characters.")]
         public string CampName { get; set; }
 
-        //[Required]
-        //[StringLength(200, ErrorMessage = "Location cannot be longer than 200 characters.")]
-        //public string Location { get; set; }
-
         [Required]
         [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
         public string Description { get; set; }
@@ -31,9 +27,8 @@ namespace DAL.Entities
         [Range(0, double.MaxValue, ErrorMessage = "Price per night must be non-negative.")]
         public decimal PricePerNight { get; set; }
 
-        [Required]
-        public int AddressId { get; set; }
-        public Address Address { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -43,7 +38,7 @@ namespace DAL.Entities
         [DataType(DataType.Date)]
         [EndDateAfterStartDate("AvailabilityStartDate", ErrorMessage = "Availability end date must be after the start date.")]
         public DateTime AvailabilityEndDate { get; set; }
-        public ICollection<Booking> Bookings { get; set; }
+        public ICollection<Booking>? Bookings { get; set; }
     }
     public class EndDateAfterStartDate : ValidationAttribute
     {

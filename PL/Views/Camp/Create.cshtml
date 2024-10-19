@@ -1,0 +1,128 @@
+﻿@using DAL.Entities
+@using DAL.Data.Enum
+@model Camp
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" asp-action="Create">
+
+                <div class="form-group mb-1">
+                    <h6>Camp Name</h6>
+                    <input asp-for="CampName" class="form-control" placeholder="Enter Camp Name">
+                    <span asp-validation-for="CampName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-1">
+                    <h6>Description</h6>
+                    <input asp-for="Description" class="form-control" placeholder="Description">
+                    <span asp-validation-for="CampName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-1">
+                    <h6>Image</h6>
+                    <input asp-for="Image" class="form-control" placeholder="Image">
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-1">
+                    <h6>Camp Category</h6>
+                    <select asp-for="CampCategory" asp-items="@Html.GetEnumSelectList<CampCategory>()" class="form-control ">
+                        <option>Select</option>
+                    </select>
+                    <span asp-validation-for="CampCategory" class="text-danger"></span>
+                </div>
+
+
+                <!----------------------------------------->
+                <h6>Address</h6>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="addressOptions" id="existingAddressRadio" value="existing" checked onchange="toggleAddressFields()" />
+                    <label class="form-check-label" for="existingAddressRadio">
+                        Choose from Existing Address
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="addressOptions" id="newAddressRadio" value="new" onchange="toggleAddressFields()"/>
+                    <label class="form-check-label" >
+                        Add a New Address
+                    </label>
+                </div>
+
+    
+                <!-- Existing Address Select -->
+                <div id="existingAddressDiv" class="form-group">
+                    <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressList">
+                        <option>Select an existing address</option>
+                    </select>
+                </div>
+
+                <!-- New Address Fields -->
+                <div id="newAddressDiv" style="display: none;">
+                    <div class="row" >   
+                        <div class="col">
+                            <input asp-for="Address.Government" class="form-control" placeholder="Government" />
+                            <span asp-validation-for="Address.Government" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <input asp-for="Address.City" class="form-control" placeholder="City" />
+                            <span asp-validation-for="Address.City" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <input asp-for="Address.District" class="form-control" placeholder="District" />
+                            <span asp-validation-for="Address.District" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!--
+                    <label asp-for="Address.Government" class="control-label">Government</label>
+                    <label asp-for="Address.City" class="control-label"></label>
+                    <label asp-for="Address.District" class="control-label">District</label>
+                -->
+
+                <script>
+                    function toggleAddressFields() {
+                        const existingAddressDiv = document.getElementById('existingAddressDiv');
+                        const newAddressDiv = document.getElementById('newAddressDiv');
+
+                        // Check which radio button is checked
+                        if (document.getElementById('existingAddressRadio').checked) {
+                            existingAddressDiv.style.display = 'block'; // Show existing address
+                            newAddressDiv.style.display = 'none'; // Hide new address
+                        } else {
+                            existingAddressDiv.style.display = 'none'; // Hide existing address
+                            newAddressDiv.style.display = 'block'; // Show new address
+                        }
+                    }
+                </script>
+
+
+                <div class="form-group mb-1">
+                    <h6>Price Per Night</h6>
+                    <input asp-for="PricePerNight" class="form-control" placeholder="Price">
+                    <span asp-validation-for="PricePerNight" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <h6>Available Start Date</h6>
+                        <input asp-for="AvailabilityStartDate" class="form-control" placeholder="Available Start Date">
+                        <span asp-validation-for="AvailabilityStartDate" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <h6>Available End Date</h6>
+                        <input asp-for="AvailabilityEndDate" class="form-control" placeholder="Available End Date">
+                        <span asp-validation-for="AvailabilityEndDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
