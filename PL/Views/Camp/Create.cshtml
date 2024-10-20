@@ -1,6 +1,7 @@
 ﻿@using DAL.Entities
 @using DAL.Data.Enum
-@model Camp
+@using PL.ViewModels
+@model CreateCampViewModel
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,7 +12,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form method="post" asp-action="Create">
+            <form method="post" asp-action="Create" enctype="multipart/form-data">
 
                 <div class="form-group mb-1">
                     <h6>Camp Name</h6>
@@ -21,13 +22,15 @@
                 <div class="form-group mb-1">
                     <h6>Description</h6>
                     <input asp-for="Description" class="form-control" placeholder="Description">
-                    <span asp-validation-for="CampName" class="text-danger"></span>
+                    <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
+
                 <div class="form-group mb-1">
                     <h6>Image</h6>
-                    <input asp-for="Image" class="form-control" placeholder="Image">
+                    <input asp-for="Image" type="file" class="form-control" placeholder="Image">
                     <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
+
                 <div class="form-group mb-1">
                     <h6>Camp Category</h6>
                     <select asp-for="CampCategory" asp-items="@Html.GetEnumSelectList<CampCategory>()" class="form-control ">
@@ -56,13 +59,13 @@
                 <!-- Existing Address Select -->
                 <div id="existingAddressDiv" class="form-group">
                     <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressList">
-                        <option>Select an existing address</option>
+                        <option value="">Select an existing address</option>
                     </select>
                 </div>
 
                 <!-- New Address Fields -->
                 <div id="newAddressDiv" style="display: none;">
-                    <div class="row" >   
+                    <div class="row">
                         <div class="col">
                             <input asp-for="Address.Government" class="form-control" placeholder="Government" />
                             <span asp-validation-for="Address.Government" class="text-danger"></span>
@@ -78,27 +81,36 @@
                     </div>
                 </div>
 
-                <!--
-                    <label asp-for="Address.Government" class="control-label">Government</label>
-                    <label asp-for="Address.City" class="control-label"></label>
-                    <label asp-for="Address.District" class="control-label">District</label>
-                -->
-
                 <script>
                     function toggleAddressFields() {
                         const existingAddressDiv = document.getElementById('existingAddressDiv');
                         const newAddressDiv = document.getElementById('newAddressDiv');
 
+                        // Get all the input elements for the new address fields
+                        const governmentField = document.querySelector('input[name="Address.Government"]');
+                        const cityField = document.querySelector('input[name="Address.City"]');
+                        const districtField = document.querySelector('input[name="Address.District"]');
+                        const addressIdSelect = document.querySelector('select[name="AddressId"]');
+
                         // Check which radio button is checked
                         if (document.getElementById('existingAddressRadio').checked) {
-                            existingAddressDiv.style.display = 'block'; // Show existing address
-                            newAddressDiv.style.display = 'none'; // Hide new address
+                            existingAddressDiv.style.display = 'block'; 
+                            newAddressDiv.style.display = 'none'; 
+
+                            // Clear new address fields
+                            governmentField.value = null;
+                            cityField.value = null;
+                            districtField.value = null;
                         } else {
                             existingAddressDiv.style.display = 'none'; // Hide existing address
                             newAddressDiv.style.display = 'block'; // Show new address
+
+                            // Clear existing address selection
+                            addressIdSelect.value = "Select an existing address";
                         }
                     }
                 </script>
+
 
 
                 <div class="form-group mb-1">

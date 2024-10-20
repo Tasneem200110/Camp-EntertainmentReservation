@@ -1,4 +1,4 @@
-﻿using BLL.Interfaces;
+﻿  using BLL.Interfaces;
 using DAL.Context;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,7 @@ namespace BLL.Repository
         {
             _context = context;
         }
+
         public async Task<IEnumerable<Address>> GetAll()
         {
             return await _context.Addresses.ToListAsync();

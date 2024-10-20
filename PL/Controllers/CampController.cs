@@ -4,6 +4,7 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DAL.Context;
 using Microsoft.AspNetCore.Components.Web;
+using PL.ViewModels;
 
 namespace PL.Controllers
 {
@@ -11,11 +12,13 @@ namespace PL.Controllers
     {
         private readonly ICampRepository _campRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly IPhotoService _photoService;
 
-        public CampController(ICampRepository campRepository, IAddressRepository addressRepository)
+        public CampController(ICampRepository campRepository, IAddressRepository addressRepository, IPhotoService photoService)
         {
             _campRepository = campRepository;
             _addressRepository = addressRepository;
+            _photoService = photoService;
         }
 
         public async Task<IActionResult> Index()
@@ -73,41 +76,93 @@ namespace PL.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(Camp camp)
-        {
+        //[HttpPost]
+        //public async Task<IActionResult> Create(Camp camp)
+        //{
 
-            bool isAddressIdValid = !string.IsNullOrEmpty(camp.AddressId?.ToString()) && int.TryParse(camp.AddressId.ToString(), out _);
-            bool isGovernmentValid = !string.IsNullOrEmpty(camp.Address.Government);
+        //    bool isAddressIdValid = !string.IsNullOrEmpty(camp.AddressId?.ToString()) && int.TryParse(camp.AddressId.ToString(), out _);
+        //    bool isGovernmentValid = !string.IsNullOrEmpty(camp.Address.Government);
+
+        //    int errorCount = ModelState.Values.Sum(v => v.Errors.Count);
+
+        //    bool moreThanTwoErrors = errorCount > 1;
+
+        //    if (!isAddressIdValid && !isGovernmentValid || moreThanTwoErrors)
+        //    {
+        //        return View(camp);
+        //    }
+        //    if (isAddressIdValid)
+        //    {
+        //        var existingAddress = await _addressRepository.GetById((int)camp.AddressId);
+        //        camp.Address = existingAddress;
+        //    }
+        //    else
+        //    {
+        //        var existingAddress = await _addressRepository.GetByAddressByGovernmentCityDistrict(camp.Address);
+        //        if (existingAddress != null)        //If the added address already exist
+        //        {
+        //            camp.Address = existingAddress;
+        //            camp.AddressId = existingAddress.AddressId;
+        //        }
+        //        else
+        //        {
+        //            _addressRepository.Add(camp.Address);
+        //        }
+        //    }
+        //        _campRepository.Add(camp);
+        //        return RedirectToAction("Index");
+        //}
+
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCampViewModel campVM)
+        {
+            bool isAddressIdValid = !string.IsNullOrEmpty(campVM.AddressId?.ToString()) && int.TryParse(campVM.AddressId.ToString(), out _);
+            bool isGovernmentValid = !string.IsNullOrEmpty(campVM.Address.Government);
 
             int errorCount = ModelState.Values.Sum(v => v.Errors.Count);
 
-            bool moreThanTwoErrors = errorCount > 2;
+            bool modelNotValid = errorCount > 1;       //if the error is less than 2 then model is valid
 
-            if (!isAddressIdValid && !isGovernmentValid || moreThanTwoErrors)
+            if (!modelNotValid)
             {
-                return View(camp);
-            }
-            if (isAddressIdValid)
-            {
-                var existingAddress = await _addressRepository.GetById((int)camp.AddressId);
-                camp.Address = existingAddress;
-            }
-            else
-            {
-                var existingAddress = await _addressRepository.GetByAddressByGovernmentCityDistrict(camp.Address);
-                if (existingAddress != null)        //If the added address already exist
+                var result = await _photoService.AddPhoto(campVM.Image);
+
+                var camp = new Camp
                 {
+                    CampName = campVM.CampName,
+                    Description = campVM.Description,
+                    CampCategory = campVM.CampCategory,
+                    Image = result.Url.ToString(),
+                    PricePerNight = campVM.PricePerNight,
+                    AvailabilityStartDate = campVM.AvailabilityStartDate,
+                    AvailabilityEndDate = campVM.AvailabilityEndDate
+                };
+
+                if (isAddressIdValid)
+                {
+                    var existingAddress = await _addressRepository.GetById((int)campVM.AddressId);
                     camp.Address = existingAddress;
-                    camp.AddressId = existingAddress.AddressId;
                 }
                 else
                 {
-                    _addressRepository.Add(camp.Address);
+                    var existingAddress = await _addressRepository.GetByAddressByGovernmentCityDistrict(campVM.Address);
+                    if (existingAddress != null)        //If the added address already exist
+                    {
+                        camp.Address = existingAddress;
+                        camp.AddressId = existingAddress.AddressId;
+                    }
+                    else
+                    {
+                        _addressRepository.Add(campVM.Address);
+                        camp.Address = campVM.Address;
+                    }
                 }
-            }
                 _campRepository.Add(camp);
                 return RedirectToAction("Index");
+            }
+            return View(campVM);
+
         }
     }
 

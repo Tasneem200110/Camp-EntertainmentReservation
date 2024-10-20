@@ -4,6 +4,8 @@ using DAL.Entities;
 using BLL.Interfaces;
 using BLL.Repository;
 using Microsoft.EntityFrameworkCore;
+using BLL.Helpers;
+using BLL.Services;
 
 public class Program
 {
@@ -20,6 +22,8 @@ public class Program
         builder.Services.AddControllersWithViews();
         builder.Services.AddScoped<ICampRepository, CampRepository>();
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+        builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 
 
         var app = builder.Build();
