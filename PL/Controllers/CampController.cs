@@ -133,6 +133,7 @@ namespace PL.Controllers
                 return View("Error");
             var campVM = new EditCampViewModel
             {
+                CampID = id,
                 CampName = camp.CampName,
                 Description = camp.Description,
                 CampCategory = camp.CampCategory,
@@ -214,6 +215,25 @@ namespace PL.Controllers
                 return View(campVM);
             }
         }
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var campDetails = await _campRepository.GetById(id);
+            if (campDetails == null)
+                return View("Error");
+            _campRepository.Delete(campDetails);
+            return RedirectToAction("Index");
+        }
+
+        //[HttpPost, ActionName("Delete")]
+        //public async Task<IActionResult> DeleteCamp(int id)
+        //{
+        //    var campDetails = await _campRepository.GetById(id);
+        //    if (campDetails == null)
+        //        return View("Error");
+        //    _campRepository.Delete(campDetails);
+        //    return RedirectToAction("Index");
+        //}
     }
 
 }
