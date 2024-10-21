@@ -1,7 +1,5 @@
-﻿@using DAL.Entities
-@using DAL.Data.Enum
-@using PL.ViewModels
-@model CreateCampViewModel
+﻿@using DAL.Data.Enum
+@model PL.ViewModels.CreateCampViewModel
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -43,19 +41,19 @@
                 <!----------------------------------------->
                 <h6>Address</h6>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="addressOptions" id="existingAddressRadio" value="existing" checked onchange="toggleAddressFields()" />
+                    <input class="form-check-input" type="radio" name="addressOptions" id="existingAddressRadio" value="existing" checked onchange="toggleAddressFields()"/>
                     <label class="form-check-label" for="existingAddressRadio">
                         Choose from Existing Address
                     </label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="addressOptions" id="newAddressRadio" value="new" onchange="toggleAddressFields()"/>
-                    <label class="form-check-label" >
+                    <label class="form-check-label">
                         Add a New Address
                     </label>
                 </div>
 
-                <input type="hidden" asp-for="ExisitingAddressFlag" id="existingAddressFlagField" value="true" />    
+                <input type="hidden" asp-for="ExisitingAddressFlag" id="existingAddressFlagField" value="true"/>
                 <!-- Existing Address Select -->
                 <div id="existingAddressDiv" class="form-group">
                     <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressList">
@@ -67,15 +65,15 @@
                 <div id="newAddressDiv" style="display: none;">
                     <div class="row">
                         <div class="col">
-                            <input asp-for="Address.Government" class="form-control" placeholder="Government" />
+                            <input asp-for="Address.Government" class="form-control" placeholder="Government"/>
                             <span asp-validation-for="Address.Government" class="text-danger"></span>
                         </div>
                         <div class="col">
-                            <input asp-for="Address.City" class="form-control" placeholder="City" />
+                            <input asp-for="Address.City" class="form-control" placeholder="City"/>
                             <span asp-validation-for="Address.City" class="text-danger"></span>
                         </div>
                         <div class="col">
-                            <input asp-for="Address.District" class="form-control" placeholder="District" />
+                            <input asp-for="Address.District" class="form-control" placeholder="District"/>
                             <span asp-validation-for="Address.District" class="text-danger"></span>
                         </div>
                     </div>
@@ -109,7 +107,6 @@
                         }
                     }
                 </script>
-
 
 
                 <div class="form-group mb-1">

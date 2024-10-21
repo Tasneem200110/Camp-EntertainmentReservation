@@ -1,12 +1,10 @@
-﻿
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 
-namespace BLL.Interfaces
+namespace BLL.Interfaces;
+
+public interface IPhotoService
 {
-    public interface IPhotoService
-    {
-        Task<string> AddPhoto(IFormFile file, bool userFlag);
-        Task<DeletionResult> DeletePhoto(string publicId);
-    }
+    Task<string> AddPhoto(IFormFile file, bool userFlag);
+    Task<DeletionResult> DeletePhoto(string publicId);
 }

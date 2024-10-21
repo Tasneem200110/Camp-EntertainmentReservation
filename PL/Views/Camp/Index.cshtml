@@ -1,5 +1,4 @@
-﻿@using DAL.Entities
-@model IEnumerable<Camp>
+﻿@model IEnumerable<Camp>
 
 
 @*
@@ -7,8 +6,11 @@
 *@
 @{
 }
+
+
 <div class="album py-5 bg-light">
     <div class="container">
+
         <div class="row">
             @foreach (var item in Model)
             {
@@ -22,9 +24,6 @@
                                 <div class="btn-group">
                                     <a asp-controller="camp" asp-action="Detail" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">View</a>
                                     <a asp-controller="camp" asp-action="Edit" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-campid="@item.CampID">
-                                        Delete
-                                    </button>
                                 </div>
                                 <small class="text-muted">@item.CampCategory</small>
                             </div>
@@ -35,47 +34,3 @@
         </div>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Camp</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete this camp?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post" asp-controller="camp" asp-action="Delete">
-                    <input type="hidden" id="campId" name="id" />
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function() {
-            // When the delete button is clicked, set the camp ID to the form's hidden input
-            $('#deleteModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var campId = button.data('campid');  // Extract camp ID from data-* attribute
-                var modal = $(this);
-
-                // Check if campId is set correctly
-                if (campId) {
-                    modal.find('#campId').val(campId); // Set the camp ID in the hidden input field
-                } else {
-                    console.log("Camp ID not found!");
-                }
-            });
-        });
-    </script>
-}
