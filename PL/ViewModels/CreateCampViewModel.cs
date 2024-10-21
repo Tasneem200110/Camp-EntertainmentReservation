@@ -1,0 +1,20 @@
+﻿using DAL.Data.Enum;
+using DAL.Entities;
+using System.ComponentModel.DataAnnotations;
+
+namespace PL.ViewModels
+{
+    public class CreateCampViewModel
+    {
+        public int CampID { get; set; }
+        public string CampName { get; set; }
+        public string Description { get; set; }
+        public CampCategory CampCategory { get; set; }
+        public IFormFile? Image { get; set; }
+        public decimal PricePerNight { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
+        public DateTime AvailabilityStartDate { get; set; }
+        public DateTime AvailabilityEndDate { get; set; }
+    }
+}
