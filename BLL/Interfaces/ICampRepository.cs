@@ -12,7 +12,7 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<Camp>> GetAll();
         Task<Camp> GetById(int id);
-
+        Task<Camp> GetByIdNoTracking(int id);
         Task<IEnumerable<Camp>> GetCampByGovernment(string government);
         Task<IEnumerable<Camp>> GetClubByCity(string city);
         Task<IEnumerable<Camp>> GetCampByDistrict(string district);

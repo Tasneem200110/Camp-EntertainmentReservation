@@ -24,7 +24,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a asp-controller="camp" asp-action="Detail" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">View</a>
-                                    <a type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a asp-controller="camp" asp-action="Edit" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
                                 </div>
                                 <small class="text-muted">@item.CampCategory</small>
                             </div>

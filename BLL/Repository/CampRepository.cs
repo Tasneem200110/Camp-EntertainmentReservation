@@ -40,6 +40,11 @@ namespace BLL.Repository
             return await _context.Camps.Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
         }
 
+        public async Task<Camp> GetByIdNoTracking(int id)
+        {
+            return await _context.Camps.Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(c => c.CampID == id);
+        }
+
         public async Task<IEnumerable<Camp>> GetCampByDistrict(string district)
         {
             return await _context.Camps.Where(c => c.Address.District.Contains(district)).ToListAsync();
