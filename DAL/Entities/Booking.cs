@@ -30,6 +30,11 @@ namespace DAL.Entities
         public int PaymentId { get; set; }
         public Payment Payment { get; set; }
 
+        [Required]
+        [StatusValidation(ErrorMessage ="Invalid Status")]
+        public string Status { get; set; }
+
+
     }
     public class BookingDateValidation : ValidationAttribute
     {
@@ -39,6 +44,22 @@ namespace DAL.Entities
             if (bookingDate <= DateTime.Now)
             {
                 return new ValidationResult("Booking date must be in the future.");
+            }
+            return ValidationResult.Success;
+        }
+    }
+    public class StatusValidation : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var status = value as string;
+            if (status != null)
+            {
+                var allowedStatuses = new[] { "Pending", "Confirmed", "Canceled" };
+                if (!Array.Exists(allowedStatuses, s => s.Equals(status, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return new ValidationResult("Invalid status. Allowed values are: Pending, Confirmed, Canceled.");
+                }
             }
             return ValidationResult.Success;
         }

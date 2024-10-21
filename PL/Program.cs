@@ -19,7 +19,7 @@ public class Program
         });
         builder.Services.AddControllersWithViews();
         builder.Services.AddScoped<ICampRepository, CampRepository>();
-
+        builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
         var app = builder.Build();
 
