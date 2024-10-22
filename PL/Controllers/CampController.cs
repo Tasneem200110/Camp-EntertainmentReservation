@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BLL.Interfaces;
+﻿using BLL.Interfaces;
 using DAL.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using DAL.Context;
-using Microsoft.AspNetCore.Components.Web;
 using PL.ViewModels;
 using BLL.Services;
 using DAL.Data.Enum;
@@ -12,12 +10,13 @@ namespace PL.Controllers
 {
     public class CampController : Controller
     {
-        private readonly ICampRepository _campRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly ICampRepository _campRepository;
         private readonly IPhotoService _photoService;
         private readonly bool campImageDefaultFlag = false;
 
-        public CampController(ICampRepository campRepository, IAddressRepository addressRepository, IPhotoService photoService)
+        public CampController(ICampRepository campRepository, IAddressRepository addressRepository,
+            IPhotoService photoService)
         {
             _campRepository = campRepository;
             _addressRepository = addressRepository;
@@ -88,7 +87,6 @@ namespace PL.Controllers
 
         public async void AddressList(IEnumerable<Address> addresses)
         {
-            
             if (addresses != null)
             {
                 var groupedAddresses = addresses
@@ -101,21 +99,16 @@ namespace PL.Controllers
                 var addressList = new List<SelectListItem>();
 
                 foreach (var group in groupedAddresses)
-                {
                     // Add each city/district as a SelectListItem
                     foreach (var address in addresses.Where(a => a.Government == group.Name))
-                    {
                         addressList.Add(new SelectListItem
                         {
                             Value = address.AddressId.ToString(),
                             Text = $"{address.City}, {address.District}",
                             Group = group
                         });
-                    }
-                }
                 ViewBag.AddressList = addressList;
             }
-
         }
 
 
@@ -148,7 +141,7 @@ namespace PL.Controllers
                 else
                 {
                     var existingAddress = await _addressRepository.GetByAddressByGovernmentCityDistrict(campVM.Address);
-                    if (existingAddress != null)        //If the added address already exist
+                    if (existingAddress != null) //If the added address already exist
                     {
                         camp.Address = existingAddress;
                         camp.AddressId = existingAddress.AddressId;
@@ -159,13 +152,14 @@ namespace PL.Controllers
                         camp.Address = campVM.Address;
                     }
                 }
+
                 _campRepository.Add(camp);
                 return RedirectToAction("Index");
             }
+
             var addresses = await _addressRepository.GetAll();
             AddressList(addresses);
             return View(campVM);
-
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -173,16 +167,15 @@ namespace PL.Controllers
             var addresses = await _addressRepository.GetAll();
             AddressList(addresses);
             var camp = await _campRepository.GetById(id);
-            if (camp == null) 
+            if (camp == null)
                 return View("Error");
             var campVM = new EditCampViewModel
             {
-                CampID = id,
                 CampName = camp.CampName,
                 Description = camp.Description,
                 CampCategory = camp.CampCategory,
                 AddressId = camp.AddressId,
-                Address = camp.Address,                
+                Address = camp.Address,
                 ImageUrl = camp.Image,
                 PricePerNight = camp.PricePerNight,
                 AvailabilityStartDate = camp.AvailabilityStartDate,
@@ -199,6 +192,7 @@ namespace PL.Controllers
                 ModelState.AddModelError("", "Failed to edit camp");
                 return View("Edit", campVM);
             }
+
             var camp = await _campRepository.GetByIdNoTracking(id);
             if (camp != null)
             {
@@ -211,10 +205,9 @@ namespace PL.Controllers
                     ModelState.AddModelError("", "Could not delete the photo");
                     return View(campVM);
                 }
+
                 if (campVM.Image != null)
-                {
                     campVM.ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
-                }
                 else
                     campVM.ImageUrl = camp.Image;
 
@@ -248,7 +241,7 @@ namespace PL.Controllers
                     CampCategory = campVM.CampCategory,
                     PricePerNight = campVM.PricePerNight,
                     AvailabilityEndDate = campVM.AvailabilityEndDate,
-                    AvailabilityStartDate = campVM.AvailabilityStartDate,
+                    AvailabilityStartDate = campVM.AvailabilityStartDate
                 };
 
                 _campRepository.Update(updatedcamp);
@@ -259,8 +252,8 @@ namespace PL.Controllers
                 return View(campVM);
             }
         }
-        
-        
+
+
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -272,6 +265,4 @@ namespace PL.Controllers
         }
 
     }
-
 }
-

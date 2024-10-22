@@ -3,9 +3,10 @@ using DAL.Entities;
 
 namespace PL.ViewModels
 {
+
     public class EditCampViewModel
     {
-        public int CampID { get; set; }
+        //public int CampID { get; set; }
         public string CampName { get; set; }
         public string Description { get; set; }
         public CampCategory CampCategory { get; set; }

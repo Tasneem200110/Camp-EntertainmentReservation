@@ -1,12 +1,6 @@
 ﻿using DAL.Context;
-using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Data.Enum;
-using System.Diagnostics;
+using DAL.Entities;
 
 namespace DAL.Data
 {
@@ -17,76 +11,81 @@ namespace DAL.Data
             if (!context.Addresses.Any())
             {
                 var addresses = new List<Address>
-                {
-                    new Address { Government = "Cairo", City = "Nasr City", District = "7th District" },
-                    new Address { Government = "Giza", City = "Dokki", District = "Tahrir Street" },
-                    new Address { Government = "Cairo", City = "Maadi", District = "Corniche" },
-                    new Address { Government = "Giza", City = "Sheikh Zayed", District = "Zayed Central" },
-                    new Address { Government = "Red Sea", City = "Hurghada"}
-                };
+            {
+                new() { Government = "Cairo", City = "Nasr City", District = "7th District" },
+                new() { Government = "Giza", City = "Dokki", District = "Tahrir Street" },
+                new() { Government = "Cairo", City = "Maadi", District = "Corniche" },
+                new() { Government = "Giza", City = "Sheikh Zayed", District = "Zayed Central" },
+                new() { Government = "Red Sea", City = "Hurghada" }
+            };
                 context.Addresses.AddRange(addresses);
                 context.SaveChanges();
             }
+
             if (!context.Camps.Any())
             {
                 var camps = new List<Camp>
+            {
+                new()
                 {
-                    new Camp()
-                    {
-                        CampName = "Gifton Island",
-                        Description = "Giftun Island is one of the top destination island in Hurghada. Set your spirit free and enjoy amazing snorkeling experience to discover the wonderful underwater world around the island.",
-                        CampCategory = CampCategory.Nature,
-                        Image = "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/2e/40/58/giftun-islands-red-sea.jpg?w=1200&h=-1&s=1",
-                        PricePerNight = 250.00M,
-                        AddressId = 5,
-                        AvailabilityStartDate = DateTime.Now,
-                        AvailabilityEndDate = DateTime.Now.AddMonths(6),
-                    },
-                    new Camp()
-                    {
-                        CampName = "Nile Adventure Park",
-                        Description = "Experience thrilling activities along the Nile.",
-                        CampCategory = CampCategory.Adventure,
-                        Image = "https://res.cloudinary.com/abercrombie-kent-ltd/image/upload/f_auto,q_auto,h_656,w_1130,c_fill/dpr_1.0/v1686053148/websites-development/vlhcj4rk_mw190915nileadventurer_41_016.jpg",
-                        PricePerNight = 200.00M,
-                        AddressId = 1,
-                        AvailabilityStartDate = DateTime.Now,
-                        AvailabilityEndDate = DateTime.Now.AddMonths(6),
-                    },
-                    new Camp()
-                    {
-                        CampName = "Pyramids Cultural Camp",
-                        Description = "Discover the history and culture around the Pyramids.",
-                        CampCategory = CampCategory.Historical,
-                        Image = "https://cdn.britannica.com/13/170813-131-B69A007D/Great-Pyramid-of-Cheops-Giza-Egypt.jpg",
-                        PricePerNight = 250.00M,
-                        AddressId = 2,
-                        AvailabilityStartDate = DateTime.Now,
-                        AvailabilityEndDate = DateTime.Now.AddMonths(4),
-                    },
-                    new Camp()
-                    {
-                        CampName = "Cairo Arts Retreat",
-                        Description = "Immerse yourself in art and music in a serene environment.",
-                        CampCategory = CampCategory.Music_Arts,
-                        Image = "https://artlogic-res.cloudinary.com/w_1600,h_1600,c_limit,f_auto,fl_lossy,q_auto/artlogicstorage/azadartgallery/images/view/d0b16ca1948dbaffe94287d5bedadca4/azadartgallery-osama-farid-old-islamic-cairo-in-gold-2021.jpg",
-                        PricePerNight = 150.00M,
-                        AddressId = 1,
-                        AvailabilityStartDate = DateTime.Now,
-                        AvailabilityEndDate = DateTime.Now.AddMonths(5),
-                    },
-                    new Camp()
-                    {
-                        CampName = "Family Fun Resort",
-                        Description = "A family-friendly resort with activities for all ages.",
-                        CampCategory = CampCategory.FamilyFriendly,
-                        Image = "https://www.propertyfinder.eg/blog/wp-content/uploads/2020/10/0013.png",
-                        PricePerNight = 180.00M,
-                        AddressId = 4,
-                        AvailabilityStartDate = DateTime.Now,
-                        AvailabilityEndDate = DateTime.Now.AddMonths(3),
-                    }
-                };
+                    CampName = "Gifton Island",
+                    Description =
+                        "Giftun Island is one of the top destination island in Hurghada. Set your spirit free and enjoy amazing snorkeling experience to discover the wonderful underwater world around the island.",
+                    CampCategory = CampCategory.Nature,
+                    Image =
+                        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/2e/40/58/giftun-islands-red-sea.jpg?w=1200&h=-1&s=1",
+                    PricePerNight = 250.00M,
+                    AddressId = 5,
+                    AvailabilityStartDate = DateTime.Now,
+                    AvailabilityEndDate = DateTime.Now.AddMonths(6)
+                },
+                new()
+                {
+                    CampName = "Nile Adventure Park",
+                    Description = "Experience thrilling activities along the Nile.",
+                    CampCategory = CampCategory.Adventure,
+                    Image =
+                        "https://res.cloudinary.com/abercrombie-kent-ltd/image/upload/f_auto,q_auto,h_656,w_1130,c_fill/dpr_1.0/v1686053148/websites-development/vlhcj4rk_mw190915nileadventurer_41_016.jpg",
+                    PricePerNight = 200.00M,
+                    AddressId = 1,
+                    AvailabilityStartDate = DateTime.Now,
+                    AvailabilityEndDate = DateTime.Now.AddMonths(6)
+                },
+                new()
+                {
+                    CampName = "Pyramids Cultural Camp",
+                    Description = "Discover the history and culture around the Pyramids.",
+                    CampCategory = CampCategory.Historical,
+                    Image = "https://cdn.britannica.com/13/170813-131-B69A007D/Great-Pyramid-of-Cheops-Giza-Egypt.jpg",
+                    PricePerNight = 250.00M,
+                    AddressId = 2,
+                    AvailabilityStartDate = DateTime.Now,
+                    AvailabilityEndDate = DateTime.Now.AddMonths(4)
+                },
+                new()
+                {
+                    CampName = "Cairo Arts Retreat",
+                    Description = "Immerse yourself in art and music in a serene environment.",
+                    CampCategory = CampCategory.Music_Arts,
+                    Image =
+                        "https://artlogic-res.cloudinary.com/w_1600,h_1600,c_limit,f_auto,fl_lossy,q_auto/artlogicstorage/azadartgallery/images/view/d0b16ca1948dbaffe94287d5bedadca4/azadartgallery-osama-farid-old-islamic-cairo-in-gold-2021.jpg",
+                    PricePerNight = 150.00M,
+                    AddressId = 1,
+                    AvailabilityStartDate = DateTime.Now,
+                    AvailabilityEndDate = DateTime.Now.AddMonths(5)
+                },
+                new()
+                {
+                    CampName = "Family Fun Resort",
+                    Description = "A family-friendly resort with activities for all ages.",
+                    CampCategory = CampCategory.FamilyFriendly,
+                    Image = "https://www.propertyfinder.eg/blog/wp-content/uploads/2020/10/0013.png",
+                    PricePerNight = 180.00M,
+                    AddressId = 4,
+                    AvailabilityStartDate = DateTime.Now,
+                    AvailabilityEndDate = DateTime.Now.AddMonths(3)
+                }
+            };
 
                 context.Camps.AddRange(camps);
                 context.SaveChanges();
@@ -166,54 +165,3 @@ namespace DAL.Data
         //    }
     }
 }
-
-
-
-//var camps2 = new List<Camp>
-//        {
-//            new Camp
-//            {
-//                CampName = "Sunny Beach Resort",
-//                Description = "A beautiful beach resort with stunning views.",
-//                CampCategory = CampCategory.Resort,
-//                Image = "https://media.istockphoto.com/id/926497236/photo/tropical-sea-in-summer.jpg?s=612x612&w=0&k=20&c=SgT--E-a5_UF4GPVnpC6r1IDtThuDiUHmtTbhHg5zJA=",
-//                PricePerNight = 150.00M,
-//                AddressId = 1,
-//                AvailabilityStartDate = DateTime.Now,
-//                AvailabilityEndDate = DateTime.Now.AddMonths(6),
-//            },
-//            new Camp
-//            {
-//                CampName = "Mountain Adventure Camp",
-//                Description = "An exciting camp for hiking and mountain sports.",
-//                CampCategory = CampCategory.Adventure,
-//                Image = "https://www.journeysinternational.com/wp-content/uploads/2019/05/nepal-mountain-hikers-625x390.jpg",
-//                PricePerNight = 100.00M,
-//                AddressId = 2,
-//                AvailabilityStartDate = DateTime.Now,
-//                AvailabilityEndDate = DateTime.Now.AddMonths(3),
-//            },
-//            new Camp
-//            {
-//                CampName = "Historical Sites Tour",
-//                Description = "Explore historical sites in a guided tour.",
-//                CampCategory = CampCategory.Historical,
-//                Image = "https://cdn.britannica.com/13/170813-131-B69A007D/Great-Pyramid-of-Cheops-Giza-Egypt.jpg",
-//                PricePerNight = 120.00M,
-//                AddressId = 3,
-//                AvailabilityStartDate = DateTime.Now,
-//                AvailabilityEndDate = DateTime.Now.AddMonths(2),
-//            },
-//            new Camp
-//            {
-//                CampName = "Family Fun Park",
-//                Description = "A family-friendly park with numerous attractions.",
-//                CampCategory = CampCategory.Entertainment,
-//                Image = "https://www.propertyfinder.eg/blog/wp-content/uploads/2020/10/0013.png",
-//                PricePerNight = 80.00M,
-//                AddressId = 4,
-//                AvailabilityStartDate = DateTime.Now,
-//                AvailabilityEndDate = DateTime.Now.AddMonths(5),
-//            }
-//        };
-

@@ -2,11 +2,6 @@
 using DAL.Context;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Repository
 {
@@ -14,7 +9,7 @@ namespace BLL.Repository
     {
         private readonly MvcAppDbContext _context;
 
-        public UserRepository(MvcAppDbContext context) 
+        public UserRepository(MvcAppDbContext context)
         {
             _context = context;
         }
@@ -28,13 +23,11 @@ namespace BLL.Repository
         public async Task DeleteUser(int UserId)
         {
             var user = await _context.Users.FindAsync(UserId);
-            if(user != null)
+            if (user != null)
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
             }
-
-
         }
 
         public async Task<User> GetById(int UserId)
@@ -50,7 +43,7 @@ namespace BLL.Repository
         public async Task Update(User user)
         {
             var exist = await _context.Users.FindAsync(user.UserID);
-            if(exist != null)
+            if (exist != null)
             {
                 exist.UserName = user.UserName;
                 exist.Address = user.Address;
@@ -60,9 +53,6 @@ namespace BLL.Repository
                 _context.Users.Update(exist);
                 await _context.SaveChangesAsync();
             }
-
-
         }
-
     }
 }

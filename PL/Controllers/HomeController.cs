@@ -1,21 +1,25 @@
+using System.Diagnostics;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using PL.Models;
-using System.Diagnostics;
 
 namespace PL.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ICampRepository _campRepository;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ICampRepository campRepository)
         {
             _logger = logger;
+            _campRepository = campRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var camps = await _campRepository.GetAll();
+            return View(camps);
         }
 
         public IActionResult Privacy()

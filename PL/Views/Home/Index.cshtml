@@ -1,8 +1,203 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model IEnumerable<Camp>
+
+<style>
+    .slider-container {
+        overflow: hidden;
+        position: relative;
+        max-width: 100%; /* Full-width on larger screens */
+        margin: 0 auto; /* Center the slider */
+    }
+
+    .slide-track {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        will-change: transform;
+    }
+
+    .slide {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .card-img-top {
+        height: 200px; /* Adjust the image height */
+        object-fit: cover; /* Ensure the image maintains aspect ratio */
+    }
+
+    .slider-container .btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .slider-container .btn i {
+        font-size: 1.5rem;
+    }
+
+    .hero-section {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.pixabay.com/photo/2020/02/04/10/42/people-4817872_1280.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-section h1 {
+        font-size: 4rem;
+    }
+
+    .hero-section p {
+        font-size: 1.5rem;
+    }
+
+    @@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 3rem;
+    }
+
+    .hero-section p {
+        font-size: 1.2rem;
+    }
+    }
+
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section text-white text-center">
+    <div class="container">
+        <h1 class="display-1 fw-bold mb-4">Explore the Wilderness</h1>
+        <p class="lead fs-3 mb-4">
+            Discover the best camping spots, exciting activities, and unforgettable
+            adventures.
+        </p>
+        <a href="#campingSpots" class="btn btn-light btn-lg px-5 py-3">
+            <i class="bi bi-compass me-2"></i>Explore Now
+        </a>
+    </div>
 </div>
+
+<!-- Featured Camping Spots -->
+<section id="campingSpots" class="py-5">
+    <div class="container">
+        <h2 class="text-center display-4 mb-5">Popular Camping Spots</h2>
+
+        <div class="slider-container">
+            <button
+                class="btn btn-outline-dark position-absolute start-0 top-50 translate-middle-y z-1 d-none d-md-block"
+                onclick="prevSlide()">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+
+            <button class="btn btn-outline-dark position-absolute end-0 top-50 translate-middle-y z-1 d-none d-md-block"
+                    onclick="nextSlide()">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <div class="slide-track">
+                @foreach (var spot in Model)
+                {
+                    <div class="slide px-3">
+                        <div class="card shadow-sm h-100">
+                            <img src="@spot.Image" class="card-img-top" alt="@spot.CampName">
+                            <div class="card-body p-5" style="background-color: #f9f9f9; border-radius: 15px;">
+                                <!-- Title and Category Section -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="card-title mb-0 fw-bold" style="font-size: 1.75rem; color: #2c3e50; font-family: 'Poppins', sans-serif;">
+                                        @spot.CampName
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-primary shadow-sm" style="font-size: 0.9rem; padding: 10px 15px; font-family: 'Roboto', sans-serif;">
+                                            @spot.CampCategory
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Description Section -->
+                                <p class="card-text" style="font-size: 1.15rem; line-height: 1.8; color: #7f8c8d; font-family: 'Open Sans', sans-serif; text-align: justify;">
+                                    @spot.Description
+                                </p>
+
+                                <!-- Price and Save Button -->
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+                                    <span class="text-muted" style="font-size: 1.1rem; font-weight: 600;">
+                                        Price: <span style="color: #27ae60;">@spot.PricePerNight.ToString("C")</span>
+                                    </span>
+                                    <button class="btn btn-outline-primary px-4 py-2"
+                                            style="border-radius: 50px; font-size: 1rem; font-family: 'Poppins', sans-serif; position: relative; overflow: hidden; transition: all 0.4s ease;"
+                                            onmouseover="this.style.backgroundColor='#3498db'; this.style.color='#fff'; this.querySelector('.button-bg').style.width='100%';"
+                                            onmouseout="this.style.backgroundColor='transparent'; this.style.color='#3498db'; this.querySelector('.button-bg').style.width='0';"
+                                            onclick="toggleFavorite(this, @spot.CampID)">
+                                        <span class="button-bg" style="position: absolute; top: 0; left: 0; width: 0; height: 100%; background-color: #3498db; transition: width 0.4s ease; z-index: 0;"></span>
+                                        <span style="position: relative; z-index: 1;">
+                                            <i class="bi bi-heart me-2"></i>
+                                            <span>Save</span>
+                                        </span>
+                                    </button>
+
+                                </div>
+
+                                <!-- Availability Section -->
+                                <div class="d-flex justify-content-between align-items-center mt-4" style="font-size: 1rem; color: #2c3e50; font-family: 'Roboto', sans-serif;">
+                                    <span class="fw-bold">
+                                        Available from: <span class="text-primary">@spot.AvailabilityStartDate.ToShortDateString()</span>
+                                    </span>
+                                    <span class="fw-bold">
+                                        to <span class="text-primary">@spot.AvailabilityEndDate.ToShortDateString()</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let mainTag = document.querySelector('main');
+    mainTag.classList.remove('container');
+    
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const slideTrack = document.querySelector('.slide-track');
+
+    function updateSlider() {
+        slideTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlider();
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlider();
+    }
+
+    function toggleFavorite(button, spotId) {
+        const icon = button.querySelector('i');
+        icon.classList.toggle('bi-heart');
+        icon.classList.toggle('bi-heart-fill');
+        icon.classList.toggle('text-danger');
+
+        fetch(`/api/favorites/toggle/${spotId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+
+    setInterval(nextSlide, 5000);
+
+
+</script>

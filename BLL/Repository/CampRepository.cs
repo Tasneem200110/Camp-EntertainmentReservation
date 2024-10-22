@@ -3,21 +3,18 @@ using DAL.Context;
 using DAL.Data.Enum;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Repository
 {
+
     public class CampRepository : ICampRepository
     {
-        public MvcAppDbContext _context {  get; set; }
         public CampRepository(MvcAppDbContext context)
         {
             _context = context;
         }
+
+        public MvcAppDbContext _context { get; set; }
 
         public bool Add(Camp camp)
         {
@@ -33,7 +30,7 @@ namespace BLL.Repository
 
         public async Task<IEnumerable<Camp>> GetAll()
         {
-            return await _context.Camps.Include(a => a.Address).ToListAsync();  
+            return await _context.Camps.Include(a => a.Address).ToListAsync();
         }
 
         public async Task<Camp> GetById(int id)
@@ -59,7 +56,7 @@ namespace BLL.Repository
         public async Task<IEnumerable<Camp>> GetCampByCity(string city)
         {
             return await _context.Camps.Where(c => c.Address.City.Contains(city)).ToListAsync();
-        }        
+        }
 
         public bool Save()
         {

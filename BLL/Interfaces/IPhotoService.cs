@@ -1,9 +1,9 @@
-﻿
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 
 namespace BLL.Interfaces
 {
+
     public interface IPhotoService
     {
         Task<string> AddPhoto(IFormFile file, bool userFlag);

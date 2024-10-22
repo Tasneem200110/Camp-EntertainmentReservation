@@ -1,9 +1,4 @@
 ﻿using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
@@ -19,8 +14,5 @@ namespace BLL.Interfaces
         Task<Booking> ConfirmBookingAsync(int bookingId);
         Task<Booking> CancelBookingAsync(int bookingId);
         Task<bool> IsCampAvailableAsync(int campId, DateTime dateTime);
-
-
-
     }
 }

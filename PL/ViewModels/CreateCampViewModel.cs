@@ -1,9 +1,9 @@
 ﻿using DAL.Data.Enum;
 using DAL.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace PL.ViewModels
 {
+
     public class CreateCampViewModel
     {
         public int CampID { get; set; }
