@@ -1,17 +1,17 @@
 ﻿@using DAL.Data.Enum
-@using PL.ViewModels
-@model CreateCampViewModel
+@model Camp
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
 }
-
+<h1>Are you sure yoy want to delete this camp?</h1>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form method="post" asp-action="Create" enctype="multipart/form-data">
+            <form method="post" asp-action="Delete" enctype="multipart/form-data">
+                <input type="hidden" value="AddressId" id="AddressId"/>
 
                 <div class="form-group mb-1">
                     <h6>Camp Name</h6>
@@ -54,7 +54,6 @@
                     </label>
                 </div>
 
-                <input type="hidden" asp-for="ExisitingAddressFlag" id="existingAddressFlagField" value="true"/>
                 <!-- Existing Address Select -->
                 <div id="existingAddressDiv" class="form-group">
                     <select asp-for="AddressId" class="form-control" asp-items="ViewBag.AddressList">
@@ -84,27 +83,16 @@
                     function toggleAddressFields() {
                         const existingAddressDiv = document.getElementById('existingAddressDiv');
                         const newAddressDiv = document.getElementById('newAddressDiv');
-                        const existingAddressField = document.getElementById('existingAddressFlagField');
 
-                        const governmentField = document.querySelector('input[name="Address.Government"]');
-                        const cityField = document.querySelector('input[name="Address.City"]');
-                        const districtField = document.querySelector('input[name="Address.District"]');
-                        const addressIdSelect = document.querySelector('select[name="AddressId"]');
-
+                        // Check which radio button is checked
                         if (document.getElementById('existingAddressRadio').checked) {
-                            existingAddressDiv.style.display = 'block'; 
-                            newAddressDiv.style.display = 'none'; 
-                            existingAddressField.value = 'true';
+                            existingAddressDiv.style.display = 'block';
+                            newAddressDiv.style.display = 'none';
 
-                            governmentField.value = null;
-                            cityField.value = null;
-                            districtField.value = null;
                         } else {
-                            existingAddressDiv.style.display = 'none'; 
-                            newAddressDiv.style.display = 'block'; 
-                            existingAddressField.value = 'false';
+                            existingAddressDiv.style.display = 'none'; // Hide existing address
+                            newAddressDiv.style.display = 'block'; // Show new address
 
-                            addressIdSelect.value = "Select an existing address";
                         }
                     }
                 </script>
@@ -128,10 +116,16 @@
                         <span asp-validation-for="AvailabilityEndDate" class="text-danger"></span>
                     </div>
                 </div>
-
-
-                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
+            <div class="form-group">
+                <form action="Delete" methd="post">
+                    <input type="hidden" asp-for="CampID"/>
+                    <input type="submit" value="Confirm" class="btn btn-danger float-right mt-3"/>
+                </form>
+
+
+            </div>
         </div>
     </div>
 </div>

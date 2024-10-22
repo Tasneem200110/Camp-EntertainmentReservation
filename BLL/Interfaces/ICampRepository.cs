@@ -1,9 +1,4 @@
 ﻿using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DAL.Data.Enum;
 
 namespace BLL.Interfaces
@@ -12,13 +7,14 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<Camp>> GetAll();
         Task<Camp> GetById(int id);
-
+        Task<Camp> GetByIdNoTracking(int id);
         Task<IEnumerable<Camp>> GetCampByGovernment(string government);
-        Task<IEnumerable<Camp>> GetClubByCity(string city);
+        Task<IEnumerable<Camp>> GetCampByCity(string city);
         Task<IEnumerable<Camp>> GetCampByDistrict(string district);
 
         Task<decimal> GetPriceByCampId(int campId);
 
+        Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category);
         //Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category);
 
         bool Add(Camp camp);

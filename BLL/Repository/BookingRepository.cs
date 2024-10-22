@@ -2,19 +2,14 @@
 using DAL.Context;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Repository
 {
     public class BookingRepository : IBookingRepository
     {
-        private MvcAppDbContext _context;
+        private readonly MvcAppDbContext _context;
 
-        public BookingRepository(MvcAppDbContext context) 
+        public BookingRepository(MvcAppDbContext context)
         {
             _context = context;
         }
@@ -35,25 +30,27 @@ namespace BLL.Repository
                 _context.Bookings.Update(booking);
                 await _context.SaveChangesAsync();
             }
+
             return booking;
         }
 
         public async Task<Booking> ConfirmBookingAsync(int bookingId)
         {
             var booking = await _context.Bookings.FindAsync(bookingId);
-            if(booking != null)
+            if (booking != null)
             {
                 booking.Status = BookingStatus.confirmed;
                 _context.Bookings.Update(booking );
                 await _context.SaveChangesAsync();
             }
+
             return booking;
         }
 
         public async Task DeleteBookingAsync(int BookingId)
         {
             var booking = await _context.Bookings.FindAsync(BookingId);
-            if(booking != null)
+            if (booking != null)
             {
                 _context.Remove(booking);
                 await _context.SaveChangesAsync();
@@ -63,9 +60,9 @@ namespace BLL.Repository
         public async Task<IEnumerable<Booking>> GetAllBookingsAsync()
         {
             return await _context.Bookings
-                                 .Include(b => b.camp)
-                                 .Include(b => b.User)
-                                 .ToListAsync();
+                .Include(b => b.camp)
+                .Include(b => b.User)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Booking>> GetBookingByCampIdAsync(int CampId)
@@ -79,9 +76,9 @@ namespace BLL.Repository
         public async Task<Booking> GetBookingByIdAsync(int BookingId)
         {
             return await _context.Bookings
-                                 .Include(b => b.camp)
-                                 .Include(b => b.User)
-                                 .FirstOrDefaultAsync(b => b.BookingId == BookingId);
+                .Include(b => b.camp)
+                .Include(b => b.User)
+                .FirstOrDefaultAsync(b => b.BookingId == BookingId);
         }
 
         public async Task<IEnumerable<Booking>> GetBookingByUserIdAsync(int userId)
@@ -95,7 +92,7 @@ namespace BLL.Repository
         public async Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate)
         {
             var conflictBooking = await _context.Bookings
-                                .Where(b => b.CampID == campId && b.StartDate == startDate && b.EndDate == endDate)
+                                .Where(b => b.CampID == campId && b.BookingDate == bookingDate)
                                 .ToListAsync();
             return conflictBooking.Count == 0;
         }
@@ -110,8 +107,8 @@ namespace BLL.Repository
                 Existing.TotalAmount = booking.TotalAmount;
                 _context.Bookings.Update(Existing);
                 await _context.SaveChangesAsync();
-                
             }
+
             return Existing;
         }
     }

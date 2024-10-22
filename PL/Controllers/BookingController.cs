@@ -1,5 +1,4 @@
 ﻿using BLL.Interfaces;
-using BLL.Repository;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +7,7 @@ using PL.ViewModels;
 
 namespace PL.Controllers
 {
+
     public class BookingController : Controller
     {
         private readonly IBookingRepository _bookingRepository;
@@ -174,7 +174,8 @@ namespace PL.Controllers
             return View(booking);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)
         {

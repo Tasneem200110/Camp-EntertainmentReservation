@@ -1,17 +1,15 @@
-using DAL.Context;
-using DAL.Data;
-using DAL.Entities;
+using BLL.Helpers;
 using BLL.Interfaces;
 using BLL.Repository;
-using Microsoft.EntityFrameworkCore;
-using BLL.Helpers;
 using BLL.Services;
+using DAL.Context;
+using DAL.Data;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -31,14 +29,12 @@ public class Program
         var app = builder.Build();
 
         if (args.Length == 1 && args[0].ToLower() == "seeddata")
-        {
             using (var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<MvcAppDbContext>();
                 context.Database.EnsureCreated();
                 DataSeeder.SeedCampData(context); // Call your seeding method
             }
-        }
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
@@ -56,8 +52,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            "default",
+            "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
     }

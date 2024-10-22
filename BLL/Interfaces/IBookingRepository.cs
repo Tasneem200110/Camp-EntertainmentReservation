@@ -1,9 +1,4 @@
 ﻿using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
@@ -22,5 +17,6 @@ namespace BLL.Interfaces
 
 
 
+        Task<bool> IsCampAvailableAsync(int campId, DateTime dateTime);
     }
 }

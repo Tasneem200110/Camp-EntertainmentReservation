@@ -1,14 +1,9 @@
-﻿using DAL.Data.Enum;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using DAL.Data.Enum;
 
 namespace DAL.Entities
 {
+
     public class Camp
     {
         public int CampID { get; set; }
@@ -20,6 +15,7 @@ namespace DAL.Entities
         [Required]
         [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters.")]
         public string Description { get; set; }
+
         public CampCategory CampCategory { get; set; }
         public string? Image { get; set; }
 
@@ -30,16 +26,17 @@ namespace DAL.Entities
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime AvailabilityStartDate { get; set; }
+        [Required][DataType(DataType.Date)] public DateTime AvailabilityStartDate { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [EndDateAfterStartDate("AvailabilityStartDate", ErrorMessage = "Availability end date must be after the start date.")]
+        [EndDateAfterStartDate("AvailabilityStartDate",
+            ErrorMessage = "Availability end date must be after the start date.")]
         public DateTime AvailabilityEndDate { get; set; }
+
         public ICollection<Booking>? Bookings { get; set; }
     }
+
     public class EndDateAfterStartDate : ValidationAttribute
     {
         private readonly string _startDatePropertyName;
@@ -55,12 +52,8 @@ namespace DAL.Entities
             var startDateProperty = validationContext.ObjectType.GetProperty(_startDatePropertyName);
             var startDate = (DateTime)startDateProperty.GetValue(validationContext.ObjectInstance);
 
-            if (endDate <= startDate)
-            {
-                return new ValidationResult("End date must be after start date.");
-            }
+            if (endDate <= startDate) return new ValidationResult("End date must be after start date.");
             return ValidationResult.Success;
         }
     }
-
 }

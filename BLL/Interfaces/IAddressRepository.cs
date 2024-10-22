@@ -1,9 +1,4 @@
 ﻿using DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
@@ -14,5 +9,8 @@ namespace BLL.Interfaces
         Task<Address> GetByAddressByGovernmentCityDistrict(Address address);
         bool Add(Address address);
         bool Save();
+        Task<IEnumerable<string>> GetGovernments();
+        Task<IEnumerable<string>> GetCities();
+        Task<IEnumerable<string>> GetDistricts();
     }
 }

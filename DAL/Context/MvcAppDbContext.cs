@@ -1,23 +1,25 @@
 ﻿using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Context
 {
     public class MvcAppDbContext : DbContext
     {
-        public MvcAppDbContext(DbContextOptions<MvcAppDbContext> options) : base(options) 
+        public MvcAppDbContext(DbContextOptions<MvcAppDbContext> options) : base(options)
         {
-
         }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Camp> Camps { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           // optionsBuilder.UseSqlServer("server=.; database=EntertainmentDb; trusted-connection=true;");
+            // optionsBuilder.UseSqlServer("server=.; database=EntertainmentDb; trusted-connection=true;");
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Booking>()
@@ -47,10 +49,5 @@ namespace DAL.Context
                 .Property(p => p.Amount)
                 .HasColumnType("decimal(18, 2)");
         }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Camp> Camps { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Address> Addresses { get; set; }
     }
 }
