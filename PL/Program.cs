@@ -21,14 +21,12 @@ public class Program
         });
         builder.Services.AddControllersWithViews();
         builder.Services.AddScoped<ICampRepository, CampRepository>();
-<<<<<<< HEAD
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-=======
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
->>>>>>> c7338b0f50d84b3646bd33f6b9650bb25edc8871
 
         var app = builder.Build();
 

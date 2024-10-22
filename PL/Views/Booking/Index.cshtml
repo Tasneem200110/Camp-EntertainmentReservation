@@ -1,8 +1,54 @@
-﻿
+﻿@model IEnumerable<Booking>
+
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<div class="container mt-5">
+    <h2>Bookings List</h2>
+    <p class="lead">View and manage your bookings below.</p>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>User ID</th>
+                    <th>Camp ID</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in Model)
+                {
+                    <tr>
+                        <td>@booking.BookingId</td>
+                        <td>@booking.UserID</td>
+                        <td>@booking.CampID</td>
+                        <td>@booking.StartDate</td>
+                        <td>@booking.EndDate</td>
+                        <td>@booking.TotalAmount.ToString("C")</td>
+                        <td>@booking.Status</td>
+                        <td>
+                            <a asp-action="Update" asp-route-id="@booking.BookingId" class="btn btn-warning btn-sm">Update</a>
+                            <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">Delete</a>
+                            <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-success btn-sm">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No bookings available.</p>
+    }
+
+    <a asp-action="Book" class="btn btn-primary mt-3">Create New Booking</a>
+</div>
 

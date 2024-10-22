@@ -8,17 +8,28 @@ using System.Threading.Tasks;
 
 namespace DAL.Entities
 {
+    public enum BookingStatus
+    {
+        pending,
+        confirmed,
+        canceled
+    }
     public class Booking
     {
         public int BookingId { get; set; }
 
         [Required(ErrorMessage ="Booking Date is required")]
-        [DataType(DataType.Date)]
         [BookingDateValidation(ErrorMessage = "Booking date must be in the future.")]
-        public DateTime BookingDate { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        [EndDateAfterStartDate("StartDate", ErrorMessage = "Availability end date must be after the start date.")]
+        public DateTime EndDate { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Total amount must be non-negative.")]
-        public decimal TotalAmount { get; set; }
+        public decimal TotalAmount  { get; set; }
 
         [Required(ErrorMessage ="User Id is required")]
         public int UserID { get; set; }
@@ -26,13 +37,10 @@ namespace DAL.Entities
         public int CampID { get; set; }
         public User User { get; set; }
         public Camp camp { get; set; }
-
-        public int PaymentId { get; set; }
         public Payment Payment { get; set; }
 
         [Required]
-        [StatusValidation(ErrorMessage ="Invalid Status")]
-        public string Status { get; set; }
+        public BookingStatus Status { get; set; }
 
 
     }
@@ -48,20 +56,6 @@ namespace DAL.Entities
             return ValidationResult.Success;
         }
     }
-    public class StatusValidation : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var status = value as string;
-            if (status != null)
-            {
-                var allowedStatuses = new[] { "Pending", "Confirmed", "Canceled" };
-                if (!Array.Exists(allowedStatuses, s => s.Equals(status, StringComparison.OrdinalIgnoreCase)))
-                {
-                    return new ValidationResult("Invalid status. Allowed values are: Pending, Confirmed, Canceled.");
-                }
-            }
-            return ValidationResult.Success;
-        }
-    }
+    
+
 }
