@@ -1,7 +1,4 @@
-﻿@using DAL.Entities
-@using DAL.Data.Enum
-@using PL.ViewModels
-@model ListCampViewModel
+﻿@model PL.ViewModels.ListCampViewModel
 
 
 @*
@@ -11,16 +8,16 @@
 }
 <div class="album py-5 bg-light">
     <div class="container">
-        <form method="get" >
+        <form method="get">
             <div class="row">
                 <div class="form-group col">
                     <h6>Camp Category</h6>
                     <select asp-for="SelectedCategory" class="form-control">
-                        @foreach(var item in Model.Categories)
+                        @foreach (var item in Model.Categories)
                         {
                             <option value="@item">@item</option>
                         }
-                    </select>                
+                    </select>
                 </div>
 
                 <div class="form-group col">
@@ -94,7 +91,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <form id="deleteForm" method="post" asp-controller="camp" asp-action="Delete">
-                    <input type="hidden" id="campId" name="id" />
+                    <input type="hidden" id="campId" name="id"/>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
@@ -113,8 +110,7 @@
 </style>
 
 
-@section Scripts {
-    <script>
+<script>
         $(document).ready(function() {
             // When the delete button is clicked, set the camp ID to the form's hidden input
             $('#deleteModal').on('show.bs.modal', function(event) {
@@ -131,4 +127,3 @@
             });
         });
     </script>
-}
