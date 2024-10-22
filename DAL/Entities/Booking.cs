@@ -12,7 +12,7 @@ namespace DAL.Entities
     {
         public int BookingId { get; set; }
 
-        [Required(ErrorMessage ="Booking Date is required")]
+        [Required(ErrorMessage = "Booking Date is required")]
         [BookingDateValidation(ErrorMessage = "Booking date must be in the future.")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
@@ -23,7 +23,7 @@ namespace DAL.Entities
         public DateTime EndDate { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Total amount must be non-negative.")]
-        public decimal TotalAmount  { get; set; }
+        public decimal TotalAmount { get; set; }
 
         [Required(ErrorMessage = "User Id is required")]
         public int UserID { get; set; }
@@ -39,15 +39,15 @@ namespace DAL.Entities
         public BookingStatus Status { get; set; }
 
 
-    public class BookingDateValidation : ValidationAttribute
-    {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        public class BookingDateValidation : ValidationAttribute
         {
-            var bookingDate = (DateTime)value;
-            if (bookingDate <= DateTime.Now) return new ValidationResult("Booking date must be in the future.");
-            return ValidationResult.Success;
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                var bookingDate = (DateTime)value;
+                if (bookingDate <= DateTime.Now) return new ValidationResult("Booking date must be in the future.");
+                return ValidationResult.Success;
+            }
         }
-    }
-    
 
+    }
 }

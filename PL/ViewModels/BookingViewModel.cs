@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static DAL.Entities.Booking;
 
 namespace PL.ViewModels
 {
@@ -28,8 +29,6 @@ namespace PL.ViewModels
 
         [Required]
         public BookingStatus Status { get; set; }
-        public IEnumerable<SelectListItem> Users { get; set; }
-        public IEnumerable<SelectListItem> Camps {  get; set; }
     }
     
 }

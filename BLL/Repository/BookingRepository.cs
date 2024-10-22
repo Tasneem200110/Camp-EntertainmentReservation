@@ -92,10 +92,11 @@ namespace BLL.Repository
         public async Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate)
         {
             var conflictBooking = await _context.Bookings
-                                .Where(b => b.CampID == campId && b.BookingDate == bookingDate)
+                                .Where(b => b.CampID == campId && b.StartDate == b.EndDate)
                                 .ToListAsync();
             return conflictBooking.Count == 0;
         }
+
 
         public async Task<Booking> UpdateBookingAsync(Booking booking)
         {

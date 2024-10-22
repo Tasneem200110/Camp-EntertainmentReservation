@@ -146,17 +146,6 @@ namespace PL.Controllers
                 await _bookingRepository.UpdateBookingAsync(booking);
                 return RedirectToAction(nameof(Index));
             }
-            bookingVM.Users = (await _userRepository.GetUsers()).Select(u => new SelectListItem
-            {
-                Value = u.UserID.ToString(),
-                Text = u.UserName
-            });
-
-            bookingVM.Camps = (await _campRepository.GetAll()).Select(c => new SelectListItem
-            {
-                Value = c.CampID.ToString(),
-                Text = c.CampName
-            });
             return View(booking);
         }
 
