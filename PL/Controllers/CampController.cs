@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DAL.Context;
 using Microsoft.AspNetCore.Components.Web;
 using PL.ViewModels;
+using BLL.Services;
+using DAL.Data.Enum;
 
 namespace PL.Controllers
 {
@@ -22,11 +24,54 @@ namespace PL.Controllers
             _photoService = photoService;
         }
 
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    IEnumerable<Camp> camps = await _campRepository.GetAll();
+        //    return View(camps);
+        //}
+
+        public async Task<IActionResult> Index(string selectedCategory, string selectedGovernment, string selectedCity, string selectedDistrict)
         {
+            // Get all camps
             IEnumerable<Camp> camps = await _campRepository.GetAll();
-            return View(camps);
+
+            // Apply filters if any are selected
+            if (selectedCategory != null && selectedCategory != "All Categories")
+            {
+                camps = CampServices.GetCampByCategory(selectedCategory, camps);
+            }
+
+            if (!string.IsNullOrEmpty(selectedGovernment) && selectedGovernment != "All Governments")
+            {
+                camps = CampServices.GetCampByGovernment(selectedGovernment, camps);
+            }
+
+            if (!string.IsNullOrEmpty(selectedCity) && selectedCity != "All Cities")
+            {
+                camps = CampServices.GetCampByCity(selectedCity, camps);
+            }
+
+            //if (!string.IsNullOrEmpty(selectedDistrict))
+            //{
+            //    camps = CampServices.GetCampByDistrict(selectedDistrict, camps);
+            //}
+
+            // Prepare ViewModel
+            var viewModel = new ListCampViewModel
+            {
+                Camps = camps,
+                Categories = new[] { "All Categories" }.Concat(Enum.GetValues(typeof(CampCategory)).Cast<CampCategory>().Select(c => c.ToString())),
+                Governments = await _addressRepository.GetGovernments(),
+                Cities = await _addressRepository.GetCities(),
+                Districts = await _addressRepository.GetDistricts(),
+                SelectedCategory = selectedCategory,
+                SelectedGovernment = selectedGovernment,
+                SelectedCity = selectedCity
+            };
+
+            return View(viewModel);
         }
+
 
         public async Task<IActionResult> Detail(int id)
         {
@@ -72,7 +117,6 @@ namespace PL.Controllers
             }
 
         }
-
 
 
         [HttpPost]
@@ -215,6 +259,8 @@ namespace PL.Controllers
                 return View(campVM);
             }
         }
+        
+        
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -225,15 +271,6 @@ namespace PL.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpPost, ActionName("Delete")]
-        //public async Task<IActionResult> DeleteCamp(int id)
-        //{
-        //    var campDetails = await _campRepository.GetById(id);
-        //    if (campDetails == null)
-        //        return View("Error");
-        //    _campRepository.Delete(campDetails);
-        //    return RedirectToAction("Index");
-        //}
     }
 
 }

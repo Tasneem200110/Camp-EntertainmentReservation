@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using DAL.Context;
+using DAL.Data.Enum;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -32,7 +33,7 @@ namespace BLL.Repository
 
         public async Task<IEnumerable<Camp>> GetAll()
         {
-            return await _context.Camps.ToListAsync();  
+            return await _context.Camps.Include(a => a.Address).ToListAsync();  
         }
 
         public async Task<Camp> GetById(int id)
@@ -55,10 +56,10 @@ namespace BLL.Repository
             return await _context.Camps.Where(c => c.Address.Government.Contains(government)).ToListAsync();
         }
 
-        public async Task<IEnumerable<Camp>> GetClubByCity(string city)
+        public async Task<IEnumerable<Camp>> GetCampByCity(string city)
         {
             return await _context.Camps.Where(c => c.Address.City.Contains(city)).ToListAsync();
-        }
+        }        
 
         public bool Save()
         {
@@ -70,6 +71,11 @@ namespace BLL.Repository
         {
             _context.Update(camp);
             return Save();
+        }
+
+        public async Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category)
+        {
+            return await _context.Camps.Where(c => c.CampCategory == category).ToListAsync();
         }
     }
 }

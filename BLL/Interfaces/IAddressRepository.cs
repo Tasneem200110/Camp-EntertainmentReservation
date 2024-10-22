@@ -14,5 +14,8 @@ namespace BLL.Interfaces
         Task<Address> GetByAddressByGovernmentCityDistrict(Address address);
         bool Add(Address address);
         bool Save();
+        Task<IEnumerable<string>> GetGovernments();
+        Task<IEnumerable<string>> GetCities();
+        Task<IEnumerable<string>> GetDistricts();
     }
 }

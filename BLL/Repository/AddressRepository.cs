@@ -44,5 +44,26 @@ namespace BLL.Repository
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public async Task<IEnumerable<string>> GetGovernments()
+        {
+            var governments = await _context.Addresses.Select(c => c.Government).Distinct().ToListAsync();
+            governments.Insert(0, "All Governments");
+            return governments;
+        }
+
+        public async Task<IEnumerable<string>> GetCities()
+        {
+            var cities =  await _context.Addresses.Select(c => c.City).Distinct().ToListAsync();
+            cities.Insert(0, "All Cities");
+            return cities;
+        }
+
+        public async Task<IEnumerable<string>> GetDistricts()
+        {
+            var districts = await _context.Addresses.Select(c => c.District).Distinct().ToListAsync();
+            districts.Insert(0, "All Districts");
+            return districts;
+        }
     }
 }
