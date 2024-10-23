@@ -80,5 +80,10 @@ namespace BLL.Repository
         {
             return await _context.Camps.Where(c => c.CampCategory == category).ToListAsync();
         }
+
+        public async Task<int> GetCampCount()
+        {
+            return  await _context.Camps.CountAsync();
+        }
     }
 }

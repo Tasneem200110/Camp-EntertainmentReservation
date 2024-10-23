@@ -59,5 +59,10 @@ namespace BLL.Repository
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<int> GetUsersCount()
+        {
+            return await _context.Users.CountAsync();
+        }
     }
 }

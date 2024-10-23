@@ -14,6 +14,7 @@ namespace BLL.Interfaces
         Task<Booking> ConfirmBookingAsync(int bookingId);
         Task<Booking> CancelBookingAsync(int bookingId);
         Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate);
+        Task<int> GetBookingCount();
 
     }
 }

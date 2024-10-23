@@ -89,6 +89,11 @@ namespace BLL.Repository
                 .ToListAsync();
         }
 
+        public async Task<int> GetBookingCount()
+        {
+            return await _context.Bookings.CountAsync();
+        }
+
         public async Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate)
         {
             var conflictBooking = await _context.Bookings
