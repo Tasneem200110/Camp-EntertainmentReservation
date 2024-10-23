@@ -85,7 +85,7 @@ namespace PL.Controllers
             return View();
         }
 
-        public async void AddressList(IEnumerable<Address> addresses)
+        public  void AddressList(IEnumerable<Address> addresses)
         {
             if (addresses != null)
             {

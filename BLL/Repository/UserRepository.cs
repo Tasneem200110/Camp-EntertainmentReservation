@@ -32,7 +32,7 @@ namespace BLL.Repository
 
         public async Task<User> GetById(int UserId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserID == UserId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == UserId);
         }
 
         public async Task<User> GetUserByEmail(string Email)
@@ -42,13 +42,12 @@ namespace BLL.Repository
 
         public async Task Update(User user)
         {
-            var exist = await _context.Users.FindAsync(user.UserID);
+            var exist = await _context.Users.FindAsync(user.Id);
             if (exist != null)
             {
                 exist.UserName = user.UserName;
-                exist.Address = user.Address;
                 exist.Email = user.Email;
-                exist.Password = user.Password;
+                exist.PasswordHash = user.PasswordHash;
 
                 _context.Users.Update(exist);
                 await _context.SaveChangesAsync();

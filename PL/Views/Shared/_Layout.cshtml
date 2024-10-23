@@ -7,19 +7,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css">
     <style>
-
-        /* Navbar Hover Effects */
         .navbar-nav .nav-link {
             transition: color 0.3s ease;
         }
 
             .navbar-nav .nav-link:hover {
-                color: #ffcc00; /* Interactive hover effect */
+                color: #ffcc00; 
             }
 
-        /* Make Sign Up button stand out */
         .btn-primary {
-            background-color: #ffcc00; /* Bright color to make it stand out */
+            background-color: #ffcc00; 
             border-color: #ffcc00;
             color: black;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -30,69 +27,88 @@
                 color: white;
             }
 
-        /* Footer Styling */
         footer {
-            background-color: rgba(0, 0, 0, 0.8); /* Dark, transparent background */
+            background-color: rgba(0, 0, 0, 0.8); 
             color: white;
+            position: absolute; 
+            left: 0;
+            bottom: 0; 
+            width: 100%; 
+        }
+
+        main {
+            padding-bottom: 70px; 
         }
     </style>
 </head>
 <body>
-<!-- Header with Navbar -->
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Camping & Entertainment</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Camp" asp-action="index">Camps</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Booking" asp-action="Index">Bookings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="About">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="User" asp-action="Login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary" asp-controller="User" asp-action="Register">Sign Up</a> <a class="btn btn-primary" asp-controller="User" asp-action="Register">Logout</a>
-                    </li>
-                </ul>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Camping & Entertainment</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link active" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Camp" asp-action="index">Camps</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Booking" asp-action="Index">Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="About">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-controller="Account" asp-action="LogOut">LogOut</a>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
+                        
+                    </ul>
+                </div>
             </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main role="main" class="container text-center">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-light text-center p-4">
+        <div class="container">
+            <p>&copy; 2024 Camping & Entertainment. All rights reserved.</p>
+            <p>
+                <a asp-controller="Home" asp-action="PrivacyPolicy" class="text-light">Privacy Policy</a> |
+                <a asp-controller="Home" asp-action="TermsOfService" class="text-light">Terms of Service</a> |
+                <a asp-controller="Home" asp-action="Contact" class="text-light">Contact</a>
+            </p>
         </div>
-    </nav>
-</header>
+    </footer>
 
-<!-- Main Content Section -->
-<main role="main" class="container text-center">
-    @RenderBody()
-</main>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Footer Section -->
-<footer class="bg-dark text-light text-center p-4 mt-5">
-    <div class="container">
-        <p>&copy; 2024 Camping & Entertainment. All rights reserved.</p>
-        <p>
-            <a asp-controller="Home" asp-action="PrivacyPolicy" class="text-light">Privacy Policy</a> |
-            <a asp-controller="Home" asp-action="TermsOfService" class="text-light">Terms of Service</a> |
-            <a asp-controller="Home" asp-action="Contact" class="text-light">Contact</a>
-        </p>
-    </div>
-</footer>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
