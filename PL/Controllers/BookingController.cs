@@ -1,128 +1,173 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
+using PL.ViewModels;
 
 namespace PL.Controllers
 {
 
     public class BookingController : Controller
     {
-        private readonly IBookingRepository _BookingRepository;
+        private readonly IBookingRepository _bookingRepository;
         private readonly ICampRepository _campRepository;
         private readonly IUserRepository _userRepository;
 
-        public BookingController(IBookingRepository bookingRepository, ICampRepository CampRepository,
-            IUserRepository userRepository)
-        {
-            _BookingRepository = bookingRepository;
+        public BookingController(IBookingRepository bookingRepository, ICampRepository CampRepository, IUserRepository userRepository) 
+        { 
+            _bookingRepository = bookingRepository;
             _campRepository = CampRepository;
             _userRepository = userRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var bookings = await _BookingRepository.GetAllBookingsAsync();
+            var bookings = await _bookingRepository.GetAllBookingsAsync();
             return View(bookings);
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var booking = await _bookingRepository.GetBookingByIdAsync(id);
+            if (booking == null)
+            {
+                return NotFound();
+            }
+            return View(booking);
         }
 
 
         public async Task<IActionResult> Book(int campId)
         {
+            
+            ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
+            //ViewBag.Camps = await _campRepository.GetAll() ?? new List<Camp>();
             var camp = await _campRepository.GetById(campId);
-            if (camp == null) return NotFound();
-            var booking = new Booking
+            var bookingVM = new BookingViewModel
             {
                 CampID = campId,
-                BookingDate = DateTime.Now
+                //Camp = camp,
             };
-            return View(booking);
+            return View(bookingVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Book(Booking booking)
+        public async Task<IActionResult> Book(BookingViewModel bookingVM)
         {
             if (ModelState.IsValid)
             {
-                var camp = await _campRepository.GetById(booking.CampID);
-                if (camp == null) return NotFound();
-                var user = await _userRepository.GetById(booking.UserID);
+                // Fetch the camp and user details
+                var camp = await _campRepository.GetById(bookingVM.CampID);
+                var user = await _userRepository.GetById(bookingVM.UserID);
+
+                // Validate if the camp exists
+                if (camp == null)
+                {
+                    ModelState.AddModelError("CampID", "The selected camp does not exist.");
+                }
+
+                // Validate if the user exists
                 if (user == null)
                 {
-                    ModelState.AddModelError("", "Invalid User Id");
-                    return View(booking);
+                    ModelState.AddModelError("UserID", "The selected user does not exist.");
                 }
 
-                var IsAvailable = await _BookingRepository.IsCampAvailableAsync(booking.CampID, booking.BookingDate);
-                if (!IsAvailable)
+                // Validate dates
+                if (bookingVM.StartDate >= camp.AvailabilityEndDate || bookingVM.EndDate >= camp.AvailabilityEndDate)
                 {
-                    ModelState.AddModelError("", "The Camp is not aAvailable for the selected dates");
-                    return View(booking);
+                    ModelState.AddModelError("", "The venue isn't available in these days");
+                    return View(bookingVM);
                 }
+                Booking booking = new Booking
+                {
+                    BookingId = bookingVM.BookingId,
+                    CampID = bookingVM.CampID,
+                    UserID = bookingVM.UserID,
+                    StartDate = bookingVM.StartDate,
+                    EndDate = bookingVM.EndDate,
+                    Status = bookingVM.Status,
+                    TotalAmount = bookingVM.TotalAmount
 
-                await _BookingRepository.AddBookingAsync(booking);
+                };
+                var price = await _campRepository.GetPriceByCampId(booking.CampID);
+                var totalDays = (booking.EndDate - booking.StartDate).Days;
+                booking.TotalAmount = totalDays * price;
+
+
+                await _bookingRepository.AddBookingAsync(booking);
                 return RedirectToAction("Index");
+                
             }
 
-            return View(booking);
+            // Redirect to Index page after successful booking
+            ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
+            return View(bookingVM);
         }
 
-        public async Task<IActionResult> update(int id)
+
+
+        public async Task<IActionResult> Update(int id)
         {
-            var booking = await _BookingRepository.GetBookingByIdAsync(id);
-            if (booking == null) return NotFound();
+            var booking = await _bookingRepository.GetBookingByIdAsync(id);
+            if (booking == null)
+            {
+                return NotFound();
+            }
             return View(booking);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, Booking booking)
+        public async Task<IActionResult> Update(int id, BookingViewModel bookingVM)
         {
-            if (id != booking.BookingId) return BadRequest();
+            Booking booking = new Booking
+            {
+                BookingId = bookingVM.BookingId,
+                CampID = bookingVM.CampID,
+                UserID = bookingVM.UserID,
+                StartDate = bookingVM.StartDate,
+                EndDate = bookingVM.EndDate,
+                Status = bookingVM.Status,
+                TotalAmount = bookingVM.TotalAmount
+
+            };
+            if (id != booking.BookingId)
+            {
+                return BadRequest();
+            }
 
             if (ModelState.IsValid)
             {
-                await _BookingRepository.UpdateBookingAsync(booking);
+                await _bookingRepository.UpdateBookingAsync(booking);
                 return RedirectToAction(nameof(Index));
             }
-
             return View(booking);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Cancel(int id)
-        {
-            var booking = await _BookingRepository.CancelBookingAsync(id);
-            if (booking == null) return NotFound();
 
-            return RedirectToAction(nameof(Index));
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Confirm(int id)
-        {
-            var booking = await _BookingRepository.ConfirmBookingAsync(id);
-            if (booking == null) return NotFound();
-
-            return RedirectToAction(nameof(Index));
-        }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var booking = await _BookingRepository.GetBookingByIdAsync(id);
-            if (booking == null) return NotFound();
+            var booking = await _bookingRepository.GetBookingByIdAsync(id);
+            if (booking == null)
+            {
+                return NotFound();
+            }
+
             return View(booking);
         }
 
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
-            await _BookingRepository.DeleteBookingAsync(id);
+            await _bookingRepository.DeleteBookingAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

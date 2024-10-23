@@ -6,17 +6,28 @@
     <title>@ViewData["Title"] - Camping & Entertainment</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
+        /* Background Image for the main container */
+        body {
+            background-image: url('~/images/camp-background.jpg'); /* Add your camping image here */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keeps the background image fixed on scroll */
+            color: black; /* Ensures the text is readable on dark backgrounds */
+        }
+
+        /* Navbar Hover Effects */
         .navbar-nav .nav-link {
             transition: color 0.3s ease;
         }
 
             .navbar-nav .nav-link:hover {
-                color: #ffcc00; 
+                color: #ffcc00;
             }
 
         .btn-primary {
-            background-color: #ffcc00; 
+            background-color: #ffcc00;
             border-color: #ffcc00;
             color: black;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -28,16 +39,46 @@
             }
 
         footer {
-            background-color: rgba(0, 0, 0, 0.8); 
+            background-color: rgba(0, 0, 0, 0.8);
             color: white;
-            position: absolute; 
+            position: absolute;
             left: 0;
-            bottom: 0; 
-            width: 100%; 
+            bottom: 0;
+            width: 100%;
         }
 
         main {
-            padding-bottom: 70px; 
+            padding-bottom: 70px;
+        }
+
+        .image-container {
+            position: relative; /* For positioning the delete icon */
+            display: inline-block; /* This allows the containers to sit beside each other */
+            width: 100px; /* Set to the desired width of the images */
+            height: 100px; /* Set to the desired height of the images */
+            margin-right: 10px; /* Add space between images */
+        }
+
+            .image-container img {
+                width: 100%; /* Make image take the full width of the container */
+                height: 100%; /* Make image take the full height of the container */
+                object-fit: cover; /* Ensures the image covers the container without stretching */
+            }
+
+        .delete-icon {
+            position: absolute;
+            top: 5px; /* Adjust position of the icon */
+            right: 5px; /* Adjust position of the icon */
+            display: none; /* Initially hidden */
+            padding: 0.25rem;
+            background: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+            border-radius: 50%; /* Circular */
+            z-index: 10; /* Above the image */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .image-container:hover .delete-icon {
+            display: block; /* Show the delete icon on hover */
         }
     </style>
 </head>
@@ -83,7 +124,7 @@
                                 <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
-                        
+
                     </ul>
                 </div>
             </div>
@@ -106,9 +147,12 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

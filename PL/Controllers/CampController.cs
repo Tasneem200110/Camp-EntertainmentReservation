@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using PL.ViewModels;
 using BLL.Services;
 using DAL.Data.Enum;
+using BLL.Repository;
 
 namespace PL.Controllers
 {
@@ -12,22 +13,19 @@ namespace PL.Controllers
     {
         private readonly IAddressRepository _addressRepository;
         private readonly ICampRepository _campRepository;
-        private readonly IPhotoService _photoService;
+        private readonly IPhotoUploadService _photoService;
+        private readonly IImageRepository _imageRepository;
         private readonly bool campImageDefaultFlag = false;
 
         public CampController(ICampRepository campRepository, IAddressRepository addressRepository,
-            IPhotoService photoService)
+            IPhotoUploadService photoService, IImageRepository imageRepository)
         {
             _campRepository = campRepository;
             _addressRepository = addressRepository;
             _photoService = photoService;
+            _imageRepository = imageRepository;
         }
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    IEnumerable<Camp> camps = await _campRepository.GetAll();
-        //    return View(camps);
-        //}
 
         public async Task<IActionResult> Index(string selectedCategory, string selectedGovernment, string selectedCity, string selectedDistrict)
         {
@@ -50,12 +48,6 @@ namespace PL.Controllers
                 camps = CampServices.GetCampByCity(selectedCity, camps);
             }
 
-            //if (!string.IsNullOrEmpty(selectedDistrict))
-            //{
-            //    camps = CampServices.GetCampByDistrict(selectedDistrict, camps);
-            //}
-
-            // Prepare ViewModel
             var viewModel = new ListCampViewModel
             {
                 Camps = camps,
@@ -75,6 +67,8 @@ namespace PL.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             Camp camp = await _campRepository.GetById(id);
+            var img = await _imageRepository.GetCampFirstImage(id);
+            camp.Image = img.Source;
             return View(camp);
         }
 
@@ -116,18 +110,27 @@ namespace PL.Controllers
         public async Task<IActionResult> Create(CreateCampViewModel campVM)
         {
             int errorCount = ModelState.Values.Sum(v => v.Errors.Count);
+            string ImageUrl;
+            List<string> imagesrc = new List<string>();
             bool modelNotValid = errorCount > 1;       //if the error is less than 2 then model is valid
 
             if (!modelNotValid)
             {
-                campVM.ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
+                
+                //ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
+
+                if (campVM.ImagesUrls != null)
+                {
+                    imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
+
+                }
 
                 var camp = new Camp
                 {
                     CampName = campVM.CampName,
                     Description = campVM.Description,
                     CampCategory = campVM.CampCategory,
-                    Image = campVM.ImageUrl,
+                    //Image = campVM.ImageUrl,
                     PricePerNight = campVM.PricePerNight,
                     AvailabilityStartDate = campVM.AvailabilityStartDate,
                     AvailabilityEndDate = campVM.AvailabilityEndDate
@@ -154,6 +157,33 @@ namespace PL.Controllers
                 }
 
                 _campRepository.Add(camp);
+
+                foreach (var src in imagesrc)
+                {
+                    var image = new Image
+                    {
+                        Source = src,
+                        CampId = camp.CampID
+                    };
+
+                    camp.Images.Add(image);
+
+                    _imageRepository.Add(image);
+
+                    //_imageRepository.Add(image1);
+                    //await _photoService.DeletePhoto(campVM.FirstImageSrc);
+                }
+
+                //var image = new Image
+                //{
+                //    Source = ImageUrl,
+                //    CampId = camp.CampID 
+                //};
+
+                //camp.Images.Add(image);
+
+                //_imageRepository.Add(image);
+
                 return RedirectToAction("Index");
             }
 
@@ -171,22 +201,25 @@ namespace PL.Controllers
                 return View("Error");
             var campVM = new EditCampViewModel
             {
+                CampID = camp.CampID,
                 CampName = camp.CampName,
                 Description = camp.Description,
                 CampCategory = camp.CampCategory,
                 AddressId = camp.AddressId,
                 Address = camp.Address,
-                ImageUrl = camp.Image,
+                //FirstImageSrc = CampServices.GetFirstImageSrc(camp),
                 PricePerNight = camp.PricePerNight,
                 AvailabilityStartDate = camp.AvailabilityStartDate,
-                AvailabilityEndDate = camp.AvailabilityEndDate
+                AvailabilityEndDate = camp.AvailabilityEndDate,
+                Images = camp.Images
             };
             return View(campVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, EditCampViewModel campVM)
+        public async Task<IActionResult> Edit( EditCampViewModel campVM)
         {
+            var id = campVM.CampID;
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "Failed to edit camp");
@@ -196,20 +229,27 @@ namespace PL.Controllers
             var camp = await _campRepository.GetByIdNoTracking(id);
             if (camp != null)
             {
-                try
+               
+                if (campVM.ImagesUrls != null)
                 {
-                    await _photoService.DeletePhoto(camp.Image);
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Could not delete the photo");
-                    return View(campVM);
-                }
+                    var imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
+                    foreach (var src in imagesrc)
+                    {
+                        var image = new Image
+                        {
+                            Source = src,
+                            CampId = id
+                        };
 
-                if (campVM.Image != null)
-                    campVM.ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
+                        campVM.Images.Add(image);
+
+                        _imageRepository.Add(image);
+                        //await _photoService.DeletePhoto(campVM.FirstImageSrc);
+                    }
+                    
+                }
                 else
-                    campVM.ImageUrl = camp.Image;
+                    campVM.Images = camp.Images;
 
                 if (campVM.ExisitingAddressFlag)
                 {
@@ -235,13 +275,14 @@ namespace PL.Controllers
                     CampID = id,
                     CampName = campVM.CampName,
                     Description = campVM.Description,
-                    Image = campVM.ImageUrl,
+                    //Image = campVM.ImageUrl,
                     Address = campVM.Address,
                     AddressId = campVM.AddressId,
                     CampCategory = campVM.CampCategory,
                     PricePerNight = campVM.PricePerNight,
                     AvailabilityEndDate = campVM.AvailabilityEndDate,
-                    AvailabilityStartDate = campVM.AvailabilityStartDate
+                    AvailabilityStartDate = campVM.AvailabilityStartDate,
+                    Images = campVM.Images,
                 };
 
                 _campRepository.Update(updatedcamp);
@@ -262,6 +303,23 @@ namespace PL.Controllers
                 return View("Error");
             _campRepository.Delete(campDetails);
             return RedirectToAction("Index");
+        }
+
+
+        public async Task<IActionResult> DeleteImage(int imageId, EditCampViewModel campVM)
+        {
+            var image = await _imageRepository.GetById(imageId);
+
+            if (image != null)
+            {
+                await _photoService.DeletePhoto(image.Source);
+                _imageRepository.Delete(image); 
+            }
+            campVM.Images = (ICollection<Image>)await _imageRepository.GetAllByCampId(campVM.CampID);
+
+            var addresses = await _addressRepository.GetAll();
+            AddressList(addresses);
+            return View("Edit", campVM);
         }
 
     }

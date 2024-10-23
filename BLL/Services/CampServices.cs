@@ -50,5 +50,9 @@ namespace BLL.Services
         //{
 
         //}
+        public static string GetFirstImageSrc(Camp camp)
+        {
+            return camp.Images.FirstOrDefault().Source;
+        }
     }
 }

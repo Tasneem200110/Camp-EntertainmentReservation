@@ -11,7 +11,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <form method="post" asp-action="Edit" enctype="multipart/form-data">
-                <input type="hidden" value="AddressId" id="AddressId"/>
+                <input type="hidden" asp-for="AddressId"/>
+                <input type="hidden" asp-for="CampID" />
+                <input type="hidden" asp-for="Images" />
 
                 <div class="form-group mb-1">
                     <h6>Camp Name</h6>
@@ -26,10 +28,26 @@
 
                 <div class="form-group mb-1">
                     <h6>Image</h6>
-                    <input asp-for="Image" type="file" class="form-control" placeholder="Image">
-                    <span asp-validation-for="Image" class="text-danger"></span>
+                    <!--<input asp-for="Image" type="file" class="form-control mb-2" placeholder="Image" multiple>-->
+                    <input asp-for="ImagesUrls" type="file" class="form-control mb-2" placeholder="Images" multiple />
+
+                    <span asp-validation-for="ImagesUrls" class="text-danger"></span>
                 </div>
 
+                    @foreach (var image in Model.Images)
+                    {
+                        <div class="image-container">
+                            <img src="@image.Source" class="rounded" width="100%" height="100%">
+                   
+                            <button asp-controller="camp" asp-action="DeleteImage" asp-route-imageId="@image.Id" asp-route-campId="@Model"
+                                    class="btn-close" style="position: absolute; top: 2px; right: 2px;"  aria-label="Close"  ></button>
+
+                        </div>
+   
+                    }
+                    <div class="clearfix"></div>
+                
+                
                 <div class="form-group mb-1">
                     <h6>Camp Category</h6>
                     <select asp-for="CampCategory" asp-items="@Html.GetEnumSelectList<CampCategory>()" class="form-control ">

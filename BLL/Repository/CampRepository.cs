@@ -30,17 +30,17 @@ namespace BLL.Repository
 
         public async Task<IEnumerable<Camp>> GetAll()
         {
-            return await _context.Camps.Include(a => a.Address).ToListAsync();
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).ToListAsync();
         }
 
         public async Task<Camp> GetById(int id)
         {
-            return await _context.Camps.Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
         }
 
         public async Task<Camp> GetByIdNoTracking(int id)
         {
-            return await _context.Camps.Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(c => c.CampID == id);
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(c => c.CampID == id);
         }
 
         public async Task<IEnumerable<Camp>> GetCampByDistrict(string district)
@@ -68,6 +68,12 @@ namespace BLL.Repository
         {
             _context.Update(camp);
             return Save();
+        }
+
+        public async Task<decimal> GetPriceByCampId(int campId)
+        {
+            var camp = await _context.Camps.FirstOrDefaultAsync(c => c.CampID == campId);
+            return camp.PricePerNight;
         }
 
         public async Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category)

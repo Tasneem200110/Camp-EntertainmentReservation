@@ -13,6 +13,7 @@ namespace BLL.Interfaces
         Task DeleteBookingAsync(int BookingId);
         Task<Booking> ConfirmBookingAsync(int bookingId);
         Task<Booking> CancelBookingAsync(int bookingId);
-        Task<bool> IsCampAvailableAsync(int campId, DateTime dateTime);
+        Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate);
+
     }
 }

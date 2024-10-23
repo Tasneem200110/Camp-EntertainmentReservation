@@ -28,7 +28,6 @@ public class Program
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IPhotoService, PhotoService>();
-
         // Configure Cloudinary settings
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 
@@ -38,17 +37,15 @@ public class Program
             options.Password.RequireLowercase = false;
             options.Password.RequireUppercase = false;
             options.Password.RequireDigit = false;
-            options.Password.RequiredLength = 3; // Minimum length of password
+            options.Password.RequiredLength = 3;
             options.Password.RequireNonAlphanumeric = false;
-            options.User.RequireUniqueEmail = true; // Ensure Email is unique
+            options.User.RequireUniqueEmail = true;  // Ensure Email is unique
         })
-        .AddEntityFrameworkStores<MvcAppDbContext>() // Specify the DbContext
+        .AddEntityFrameworkStores<MvcAppDbContext>()
         .AddDefaultTokenProviders();
 
-        // Register IHttpContextAccessor to access HttpContext
         builder.Services.AddHttpContextAccessor();
-
-        // Build the application
+        // Create a scope for database seeding
         var app = builder.Build();
 
         // Seed data if the argument "seeddata" is provided
@@ -62,7 +59,7 @@ public class Program
             }
         }
 
-        // Configure the HTTP request pipeline
+        // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Home/Error");
@@ -74,8 +71,8 @@ public class Program
 
         app.UseRouting();
 
-        app.UseAuthentication(); // Enable authentication middleware
-        app.UseAuthorization(); // Enable authorization middleware
+        app.UseAuthentication(); // Ensure authentication is enabled
+        app.UseAuthorization();
 
         app.MapControllerRoute(
             name: "default",

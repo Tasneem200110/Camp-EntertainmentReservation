@@ -26,7 +26,7 @@ namespace BLL.Repository
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking != null)
             {
-                booking.Status = "Canceled";
+                booking.Status = BookingStatus.canceled;
                 _context.Bookings.Update(booking);
                 await _context.SaveChangesAsync();
             }
@@ -39,8 +39,8 @@ namespace BLL.Repository
             var booking = await _context.Bookings.FindAsync(bookingId);
             if (booking != null)
             {
-                booking.Status = "Confirmed";
-                _context.Bookings.Update(booking);
+                booking.Status = BookingStatus.confirmed;
+                _context.Bookings.Update(booking );
                 await _context.SaveChangesAsync();
             }
 
@@ -89,20 +89,22 @@ namespace BLL.Repository
                 .ToListAsync();
         }
 
-        public async Task<bool> IsCampAvailableAsync(int campId, DateTime bookingDate)
+        public async Task<bool> IsCampAvailableAsync(int campId, DateTime startDate, DateTime endDate)
         {
             var conflictBooking = await _context.Bookings
-                .Where(b => b.CampID == campId && b.BookingDate == bookingDate)
-                .ToListAsync();
+                                .Where(b => b.CampID == campId && b.StartDate == b.EndDate)
+                                .ToListAsync();
             return conflictBooking.Count == 0;
         }
+
 
         public async Task<Booking> UpdateBookingAsync(Booking booking)
         {
             var Existing = await _context.Bookings.FindAsync(booking.BookingId);
             if (Existing != null)
             {
-                Existing.BookingDate = booking.BookingDate;
+                Existing.StartDate = booking.StartDate;
+                Existing.EndDate = booking.EndDate;
                 Existing.TotalAmount = booking.TotalAmount;
                 _context.Bookings.Update(Existing);
                 await _context.SaveChangesAsync();
