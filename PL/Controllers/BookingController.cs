@@ -38,75 +38,72 @@ namespace PL.Controllers
         }
 
 
-        public async Task<IActionResult> Book()
+        public async Task<IActionResult> Book(int campId)
         {
-
+            
             ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
-            ViewBag.Camps = await _campRepository.GetAll() ?? new List<Camp>();
-            return View();
+            //ViewBag.Camps = await _campRepository.GetAll() ?? new List<Camp>();
+            var camp = await _campRepository.GetById(campId);
+            var bookingVM = new BookingViewModel
+            {
+                CampID = campId,
+                //Camp = camp,
+            };
+            return View(bookingVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Book(BookingViewModel bookingVM)
         {
-            
-            // Fetch the camp and user details
-            var camp = await _campRepository.GetById(bookingVM.CampID);
-            var user = await _userRepository.GetById(bookingVM.UserID);
-
-            // Validate if the camp exists
-            if (camp == null)
-            {
-                ModelState.AddModelError("CampID", "The selected camp does not exist.");
-            }
-
-            // Validate if the user exists
-            if (user == null)
-            {
-                ModelState.AddModelError("UserID", "The selected user does not exist.");
-            }
-
-            // Validate dates
-            if (bookingVM.StartDate >= bookingVM.EndDate)
-            {
-                ModelState.AddModelError("", "End Date must be later than Start Date.");
-            }
-            Booking booking = new Booking
-            {
-                BookingId = bookingVM.BookingId,
-                CampID = bookingVM.CampID,
-                UserID = bookingVM.UserID,
-                StartDate = bookingVM.StartDate,
-                EndDate = bookingVM.EndDate,
-                Status = bookingVM.Status,
-                TotalAmount = bookingVM.TotalAmount
-                
-            };
-            var price = await _campRepository.GetPriceByCampId(booking.CampID);
-            var totalDays = (booking.EndDate - booking.StartDate).Days;
-            booking.TotalAmount = totalDays * price;
-           
             if (ModelState.IsValid)
-            { 
+            {
+                // Fetch the camp and user details
+                var camp = await _campRepository.GetById(bookingVM.CampID);
+                var user = await _userRepository.GetById(bookingVM.UserID);
+
+                // Validate if the camp exists
+                if (camp == null)
+                {
+                    ModelState.AddModelError("CampID", "The selected camp does not exist.");
+                }
+
+                // Validate if the user exists
+                if (user == null)
+                {
+                    ModelState.AddModelError("UserID", "The selected user does not exist.");
+                }
+
+                // Validate dates
+                if (bookingVM.StartDate >= camp.AvailabilityEndDate || bookingVM.EndDate >= camp.AvailabilityEndDate)
+                {
+                    ModelState.AddModelError("", "The venue isn't available in these days");
+                    return View(bookingVM);
+                }
+                Booking booking = new Booking
+                {
+                    BookingId = bookingVM.BookingId,
+                    CampID = bookingVM.CampID,
+                    UserID = bookingVM.UserID,
+                    StartDate = bookingVM.StartDate,
+                    EndDate = bookingVM.EndDate,
+                    Status = bookingVM.Status,
+                    TotalAmount = bookingVM.TotalAmount
+
+                };
+                var price = await _campRepository.GetPriceByCampId(booking.CampID);
+                var totalDays = (booking.EndDate - booking.StartDate).Days;
+                booking.TotalAmount = totalDays * price;
+
 
                 await _bookingRepository.AddBookingAsync(booking);
                 return RedirectToAction("Index");
+                
             }
-            else if (!ModelState.IsValid)
-            {
-                // Optional: Add logging here to inspect validation errors
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-                return View(booking);
-            }
-            
 
             // Redirect to Index page after successful booking
-            return View(booking);
+            ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
+            return View(bookingVM);
         }
 
 

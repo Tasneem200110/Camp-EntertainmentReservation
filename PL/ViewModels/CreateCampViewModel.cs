@@ -1,5 +1,6 @@
 ﻿using DAL.Data.Enum;
 using DAL.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PL.ViewModels
 {
@@ -16,8 +17,8 @@ namespace PL.ViewModels
         public decimal PricePerNight { get; set; }
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
-        public DateTime AvailabilityStartDate { get; set; }
-        public DateTime AvailabilityEndDate { get; set; }
+        [DataType(DataType.Date)] public DateTime AvailabilityStartDate { get; set; }
+        [DataType(DataType.Date)] public DateTime AvailabilityEndDate { get; set; }
         public ICollection<Image> Images { get; set; } = new List<Image>();
     }
 }
