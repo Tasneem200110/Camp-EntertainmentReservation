@@ -1,33 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace DAL.Entities
 {
-
-    public class User
+    public class User : IdentityUser<int>
     {
-        public DateTime DateOfCreation = DateTime.Now;
-        public int UserID { get; set; }
+        public User()
+        {
+            DateOfCreation = DateTime.Now;
+            Bookings = new List<Booking>();
+        }
 
-        [Required(ErrorMessage = "UserName is required")]
-        [StringLength(100)]
-        public string UserName { get; set; }
-
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string Email { get; set; }
-
-        [Required(ErrorMessage = "Password is required")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-            ErrorMessage =
-                "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character.")]
-        public string Password { get; set; }
-
-        public string Role { get; set; } // User Or  Admin
-
-        [ForeignKey("Address")] public int? AddressId { get; set; }
-
-        public Address? Address { get; set; }
+        public DateTime DateOfCreation { get; set; }
 
         public ICollection<Booking> Bookings { get; set; }
     }
