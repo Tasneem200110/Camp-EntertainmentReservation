@@ -40,6 +40,11 @@ namespace BLL.Repository
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
         }
 
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
         public async Task Update(User user)
         {
             var exist = await _context.Users.FindAsync(user.UserID);

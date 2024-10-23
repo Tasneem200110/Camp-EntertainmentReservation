@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DAL.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static DAL.Entities.Booking;
 
-namespace DAL.Entities
+namespace PL.ViewModels
 {
-    public enum BookingStatus
-    {
-        pending,
-        confirmed,
-        canceled
-    }
-    public class Booking
+    public class BookingViewModel
     {
         public int BookingId { get; set; }
 
@@ -27,27 +24,11 @@ namespace DAL.Entities
 
         [Required(ErrorMessage = "User Id is required")]
         public int UserID { get; set; }
-
         [Required(ErrorMessage = "Camp Id is required")]
         public int CampID { get; set; }
 
-        public User User { get; set; }
-        public Camp camp { get; set; }
-        public Payment Payment { get; set; }
-
         [Required]
         public BookingStatus Status { get; set; }
-
-
-        public class BookingDateValidation : ValidationAttribute
-        {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                var bookingDate = (DateTime)value;
-                if (bookingDate <= DateTime.Now) return new ValidationResult("Booking date must be in the future.");
-                return ValidationResult.Success;
-            }
-        }
-
     }
+    
 }

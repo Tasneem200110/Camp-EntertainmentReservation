@@ -70,6 +70,12 @@ namespace BLL.Repository
             return Save();
         }
 
+        public async Task<decimal> GetPriceByCampId(int campId)
+        {
+            var camp = await _context.Camps.FirstOrDefaultAsync(c => c.CampID == campId);
+            return camp.PricePerNight;
+        }
+
         public async Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category)
         {
             return await _context.Camps.Where(c => c.CampCategory == category).ToListAsync();
