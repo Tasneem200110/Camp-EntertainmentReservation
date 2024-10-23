@@ -23,7 +23,8 @@ public class Program
         builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-        builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<IPhotoUploadService, PhotoUploadService>();
+        builder.Services.AddScoped<IImageRepository, ImageRepository>();
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 
 

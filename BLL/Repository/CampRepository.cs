@@ -30,17 +30,17 @@ namespace BLL.Repository
 
         public async Task<IEnumerable<Camp>> GetAll()
         {
-            return await _context.Camps.Include(a => a.Address).ToListAsync();
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).ToListAsync();
         }
 
         public async Task<Camp> GetById(int id)
         {
-            return await _context.Camps.Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
         }
 
         public async Task<Camp> GetByIdNoTracking(int id)
         {
-            return await _context.Camps.Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(c => c.CampID == id);
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(c => c.CampID == id);
         }
 
         public async Task<IEnumerable<Camp>> GetCampByDistrict(string district)

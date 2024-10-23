@@ -14,6 +14,7 @@ namespace DAL.Context
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,6 +49,16 @@ namespace DAL.Context
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<Camp>()
+               .HasMany(c => c.Images)
+               .WithOne(i => i.Camp)
+               .HasForeignKey(i => i.CampId);
+
+            //modelBuilder.Entity<User>()
+            //    .HasOne(u => u.Image)
+            //    .WithOne(i => i.User)
+            //    .HasForeignKey<Image>(i => i.UserId);
         }
     }
 }

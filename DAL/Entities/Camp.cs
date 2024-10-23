@@ -35,6 +35,7 @@ namespace DAL.Entities
         public DateTime AvailabilityEndDate { get; set; }
 
         public ICollection<Booking>? Bookings { get; set; }
+        public ICollection<Image> Images { get; set; } = new List<Image>();
     }
 
     public class EndDateAfterStartDate : ValidationAttribute

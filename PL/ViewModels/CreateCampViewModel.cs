@@ -11,12 +11,13 @@ namespace PL.ViewModels
         public string Description { get; set; }
         public CampCategory CampCategory { get; set; }
         public bool ExisitingAddressFlag { get; set; }
-        public IFormFile? Image { get; set; }
+        public List<IFormFile>? ImagesUrls { get; set; }
         public string? ImageUrl { get; set; }
         public decimal PricePerNight { get; set; }
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
         public DateTime AvailabilityStartDate { get; set; }
         public DateTime AvailabilityEndDate { get; set; }
+        public ICollection<Image> Images { get; set; } = new List<Image>();
     }
 }
