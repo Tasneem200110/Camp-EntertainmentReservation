@@ -1,17 +1,23 @@
 ﻿using BLL.Interfaces;
 using DAL.Context;
 using DAL.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+
+using System.Web.Mvc;
 
 namespace BLL.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly MvcAppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserRepository(MvcAppDbContext context)
+        public UserRepository(MvcAppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddUser(User user)
@@ -57,6 +63,23 @@ namespace BLL.Repository
                 _context.Users.Update(exist);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int> GetUsersCount()
+        {
+            //_context.Users.
+            return await _context.Users.CountAsync();
+        }
+        public int? GetUserId()
+        {
+            var userIdString = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (int.TryParse(userIdString, out int userId))
+            {
+                return userId;
+            }
+
+            return null; // Return null if conversion fails or userId is not found
         }
     }
 }

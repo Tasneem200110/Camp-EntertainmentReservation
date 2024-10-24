@@ -17,18 +17,18 @@ namespace PL.ViewModels
         [Required(ErrorMessage = "Booking Date is required")]
         [BookingDateValidation(ErrorMessage = "Booking date must be in the future.")]
         [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now;
 
         [Required]
         [DataType(DataType.Date)]
         [EndDateAfterStartDate("StartDate", ErrorMessage = "Availability end date must be after the start date.")]
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = DateTime.Now.AddDays(1);
 
         [Range(0, double.MaxValue, ErrorMessage = "Total amount must be non-negative.")]
         public decimal TotalAmount { get; set; }
 
-        [Required(ErrorMessage = "User Id is required")]
-        public int UserID { get; set; }
+        //[Required(ErrorMessage = "User Id is required")]
+        public int? UserID { get; set; }
         [Required(ErrorMessage = "Camp Id is required")]
         public int CampID { get; set; }
 

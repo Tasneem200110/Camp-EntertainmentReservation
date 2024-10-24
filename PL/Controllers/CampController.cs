@@ -119,11 +119,11 @@ namespace PL.Controllers
                 
                 //ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
 
-                if (campVM.ImagesUrls != null)
-                {
+                //if (campVM.ImagesUrls == null)
+                //{
                     imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
 
-                }
+                //}
 
                 var camp = new Camp
                 {

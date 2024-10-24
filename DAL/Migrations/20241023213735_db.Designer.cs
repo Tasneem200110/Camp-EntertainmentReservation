@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(MvcAppDbContext))]
-    [Migration("20241024011738_AddAllEntities")]
-    partial class AddAllEntities
+    [Migration("20241023213735_db")]
+    partial class db
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

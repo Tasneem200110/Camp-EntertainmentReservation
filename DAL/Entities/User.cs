@@ -11,6 +11,7 @@ namespace DAL.Entities
             DateOfCreation = DateTime.Now;
             Bookings = new List<Booking>();
         }
+        //public int Id;
 
         public DateTime DateOfCreation { get; set; }
 

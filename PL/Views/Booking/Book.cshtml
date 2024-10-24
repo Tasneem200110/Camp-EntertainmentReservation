@@ -22,50 +22,18 @@
         
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <div class="form-group mb-3">
-            <label asp-for="UserID" class="form-label">User ID</label>
-            <select asp-for="UserID" class="form-control" required>
-                <option value="">-- Select User --</option>
-                @if (ViewBag.Users != null)
-                {
-                    foreach (var user in ViewBag.Users as IEnumerable<DAL.Entities.User>)
-                    {
-                        <option value="@user.Id">@user.Id</option>
-                    }
-                }
-            </select>
-            <span asp-validation-for="UserID" class="text-danger"></span>
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="StartDate" class="form-label">Start Date</label>
+                <input asp-for="StartDate" class="form-control" type="date" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="EndDate" class="form-label">End Date</label>
+                <input asp-for="EndDate" class="form-control" type="date" required />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
         </div>
-
-        <!--
-        <div class="form-group mb-3">
-            <label asp-for="CampID" class="form-label">Camp ID</label>
-            <select asp-for="CampID" class="form-control" required>
-                <option value="">-- Select Camp --</option>
-                @if (ViewBag.Camps != null)
-                {
-                    foreach (var camp in ViewBag.Camps as IEnumerable<DAL.Entities.Camp>)
-                    {
-                        <option value="@camp.CampID">@camp.CampID</option>
-                    }
-                }
-            </select>
-            <span asp-validation-for="CampID" class="text-danger"></span>
-        </div>
-        -->
-
-        <div class="form-group mb-3">
-            <label asp-for="StartDate" class="form-label">Start Date</label>
-            <input asp-for="StartDate" class="form-control" type="date" required />
-            <span asp-validation-for="StartDate" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="EndDate" class="form-label">End Date</label>
-            <input asp-for="EndDate" class="form-control" type="date" required />
-            <span asp-validation-for="EndDate" class="text-danger"></span>
-        </div>
-
 
         <div class="form-group mb-3">
             <label asp-for="PaymentMethod" class="control-label">Payment Method</label>
@@ -78,6 +46,8 @@
             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
         </div>
         <br />
+       
+
 
         <button type="submit" class="btn btn-primary">Create Booking</button>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>

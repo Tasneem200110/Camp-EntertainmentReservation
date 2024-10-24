@@ -3,6 +3,7 @@ using DAL.Context;
 using DAL.Data.Enum;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace BLL.Repository
 {
@@ -18,6 +19,7 @@ namespace BLL.Repository
 
         public bool Add(Camp camp)
         {
+            
             _context.Add(camp);
             return Save();
         }
@@ -79,6 +81,11 @@ namespace BLL.Repository
         public async Task<IEnumerable<Camp>> GetCampByCategory(CampCategory category)
         {
             return await _context.Camps.Where(c => c.CampCategory == category).ToListAsync();
+        }
+
+        public async Task<int> GetCampCount()
+        {
+            return  await _context.Camps.CountAsync();
         }
     }
 }
