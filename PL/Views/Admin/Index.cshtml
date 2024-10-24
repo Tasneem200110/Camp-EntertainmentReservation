@@ -92,6 +92,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--
                         <div class="col-md-3">
                             <div class="card text-white bg-warning">
                                 <div class="card-body">
@@ -100,7 +102,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </div>-->
 
                     <!-- Charts Section -->
                     <div class="row">
@@ -149,20 +151,45 @@
 
     <!-- Chart.js script -->
     <script>
+        // var ctx = document.getElementById('bookingsChart').getContext('2d');
+        // var bookingsChart = new Chart(ctx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['Oct 1', 'Oct 5', 'Oct 10', 'Oct 15', 'Oct 20'],
+        //         datasets: [{
+        //             label: 'Bookings',
+        //             data: [10, 25, 15, 30, 45],
+        //             backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        //             borderColor: 'rgba(54, 162, 235, 1)',
+        //             borderWidth: 1
+        //         }]
+        //     }
+        // });
+
         var ctx = document.getElementById('bookingsChart').getContext('2d');
         var bookingsChart = new Chart(ctx, {
-            type: 'line',
+            type: 'line', // or 'bar', depending on your preference
             data: {
-                labels: ['Oct 1', 'Oct 5', 'Oct 10', 'Oct 15', 'Oct 20'],
+                labels: @Html.Raw(Json.Serialize(Model.WeekLabels)), // Pass the week labels
                 datasets: [{
                     label: 'Bookings',
-                    data: [10, 25, 15, 30, 45],
+                    data: @Html.Raw(Json.Serialize(Model.MonthBookingStatistics)), // Pass the booking data
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }]
-            }
-        });
+            },
+            options: {
+                    responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+
 
         var ctx2 = document.getElementById('popularCampsChart').getContext('2d');
         var popularCampsChart = new Chart(ctx2, {
@@ -178,6 +205,12 @@
                 }]
             }
         });
+    </script>
+
+    <canvas id="bookingsChart"></canvas>
+
+    <script>
+        
     </script>
 
 </body>

@@ -1,9 +1,11 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using PL.ViewModels;
+using System.Security.Claims;
 
 namespace PL.Controllers
 {
@@ -13,6 +15,7 @@ namespace PL.Controllers
         private readonly IBookingRepository _bookingRepository;
         private readonly ICampRepository _campRepository;
         private readonly IUserRepository _userRepository;
+        private int UserId;
 
         public BookingController(IBookingRepository bookingRepository, ICampRepository CampRepository, IUserRepository userRepository) 
         { 
@@ -23,7 +26,17 @@ namespace PL.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var bookings = await _bookingRepository.GetAllBookingsAsync();
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            int.TryParse(userIdString, out int userId);
+            {
+                UserId = userId;
+                //IdentityUser.Id;
+            }
+
+            //------------------------------------------------------------for Admin----------------------------------------
+            //var bookings = await _bookingRepository.GetAllBookingsAsync();
+            var bookings = await _bookingRepository.GetBookingByUserIdAsync(UserId);
             return View(bookings);
         }
 
@@ -41,11 +54,13 @@ namespace PL.Controllers
         public async Task<IActionResult> Book(int campId)
         {
             
-            ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
+            //ViewBag.Users = await _userRepository.GetUsers() ?? new List<User>();
             //ViewBag.Camps = await _campRepository.GetAll() ?? new List<Camp>();
             var camp = await _campRepository.GetById(campId);
             var bookingVM = new BookingViewModel
             {
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1),
                 CampID = campId,
                 //Camp = camp,
             };
@@ -60,7 +75,20 @@ namespace PL.Controllers
             {
                 // Fetch the camp and user details
                 var camp = await _campRepository.GetById(bookingVM.CampID);
-                var user = await _userRepository.GetById(bookingVM.UserID);
+                //var u = User.i
+                User user = null;
+                var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (int.TryParse(userIdString, out int userId))
+                {
+                    UserId = userId;
+                    user = await _userRepository.GetById(UserId);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid user ID.");
+                    //return View(bookingVM);
+                }
 
                 // Validate if the camp exists
                 if (camp == null)
@@ -84,7 +112,7 @@ namespace PL.Controllers
                 {
                     BookingId = bookingVM.BookingId,
                     CampID = bookingVM.CampID,
-                    UserID = bookingVM.UserID,
+                    UserID = UserId,
                     StartDate = bookingVM.StartDate,
                     EndDate = bookingVM.EndDate,
                     Status = bookingVM.Status,
@@ -126,7 +154,7 @@ namespace PL.Controllers
             {
                 BookingId = bookingVM.BookingId,
                 CampID = bookingVM.CampID,
-                UserID = bookingVM.UserID,
+                UserID = UserId,
                 StartDate = bookingVM.StartDate,
                 EndDate = bookingVM.EndDate,
                 Status = bookingVM.Status,

@@ -1,5 +1,6 @@
 ﻿using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PL.ViewModels;
 
 namespace PL.Controllers
@@ -28,6 +29,17 @@ namespace PL.Controllers
             dashboardVM.CampsCount = await _campRepository.GetCampCount();
             dashboardVM.BookingsCount = await _bookingRepository.GetBookingCount();
             dashboardVM.UsersCount = await _userRepository.GetUsersCount();
+            dashboardVM.MonthBookingStatistics = await _bookingRepository.GetMonthStatistics();
+            
+            //v
+            // Prepare the model to send to the view
+            //var model = new
+            //{
+            //    WeekLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" }, // Labels for the weeks
+            //    //MonthBookingStatistics = weekCounts // Booking counts for each week
+            //};
+
+
 
             return View(dashboardVM);
         }
