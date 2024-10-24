@@ -49,13 +49,13 @@
                                 <!-- Confirm Booking Button for Admins -->
                                 @if (User.IsInRole("Admin"))
                                 {
+                                <!-- Delete Button for Admins Only -->
+                                <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">🗑️ Delete</a>
                                 <form asp-action="ConfirmBooking" asp-controller="Booking" method="post" class="d-inline">
                                 <input type="hidden" name="id" value="@booking.BookingId" />
                                 <button type="submit" class="btn btn-primary btn-sm">✔️ Confirm Booking</button>
                                 </form>
 
-                                <!-- Delete Button for Admins Only -->
-                                <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">🗑️ Delete</a>
                                 }
                             </div>
                         </td>
@@ -70,13 +70,19 @@
     }
 </div>
 <style>
-.btn-group .btn {
-    transition: background-color 0.1s, color 0.3s;
-}
+    .btn-group .btn {
+        transition: background-color 0.1s, color 0.3s;
+    }
 
-.btn-group .btn:hover {
-    background-color: #ff5733; /* Customize hover color */
-    color: white;
-}
+    .btn-group .btn:hover {
+        background-color: #ff5733; /* Customize hover color */
+        color: white;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
 </style>
 
