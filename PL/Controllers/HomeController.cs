@@ -27,6 +27,27 @@ namespace PL.Controllers
             return View();
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult Contact(string name, string email, string message)
+        {
+            // Handle the form submission (e.g., send an email or store the data)
+
+            ViewBag.Message = "Your message has been sent successfully!";
+
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

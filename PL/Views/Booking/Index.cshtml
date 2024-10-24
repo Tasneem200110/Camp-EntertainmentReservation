@@ -3,6 +3,12 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 
 <div class="container mt-5">
     <h2>Bookings List</h2>
@@ -13,9 +19,8 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Booking ID</th>
-                    <th>User ID</th>
-                    <th>Camp ID</th>
+                    <th>Camp Name</th>
+                    <th>Camp Category</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Total Amount</th>
@@ -27,17 +32,32 @@
                 @foreach (var booking in Model)
                 {
                     <tr>
-                        <td>@booking.BookingId</td>
-                        <td>@booking.UserID</td>
-                        <td>@booking.CampID</td>
+                        <td>@booking.camp.CampName</td>
+                        <td>@booking.camp.CampCategory</td>
                         <td>@booking.StartDate</td>
                         <td>@booking.EndDate</td>
                         <td>@booking.TotalAmount.ToString("C")</td>
                         <td>@booking.Status</td>
                         <td>
-                            <a asp-action="Update" asp-route-id="@booking.BookingId" class="btn btn-warning btn-sm">Update</a>
-                            <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">Delete</a>
-                            <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-success btn-sm">Details</a>
+                            <div class="btn-group" role="group" aria-label="Actions">
+                                <!-- View Details Button -->
+                                <a asp-action="Details" asp-route-id="@booking.BookingId" class="btn btn-success btn-sm">🔍 Details</a>
+
+                                <!-- View Payments Button -->
+                                <a asp-controller="Payment" asp-action="PaymentByBookingId" asp-route-bookingId="@booking.BookingId" class="btn btn-info btn-sm">💳 View Payments</a>
+
+                                <!-- Confirm Booking Button for Admins -->
+                                @if (User.IsInRole("Admin"))
+                                {
+                                <form asp-action="ConfirmBooking" asp-controller="Booking" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@booking.BookingId" />
+                                <button type="submit" class="btn btn-primary btn-sm">✔️ Confirm Booking</button>
+                                </form>
+
+                                <!-- Delete Button for Admins Only -->
+                                <a asp-action="Delete" asp-route-id="@booking.BookingId" class="btn btn-danger btn-sm">🗑️ Delete</a>
+                                }
+                            </div>
                         </td>
                     </tr>
                 }
@@ -49,4 +69,14 @@
         <p>No bookings available.</p>
     }
 </div>
+<style>
+.btn-group .btn {
+    transition: background-color 0.1s, color 0.3s;
+}
+
+.btn-group .btn:hover {
+    background-color: #ff5733; /* Customize hover color */
+    color: white;
+}
+</style>
 

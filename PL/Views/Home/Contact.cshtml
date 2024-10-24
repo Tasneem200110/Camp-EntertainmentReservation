@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewData["Title"] = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Hero Section -->
+<div class="jumbotron jumbotron-fluid bg-primary text-white">
+    <div class="container text-center">
+        <h1 class="display-4">Get in Touch with Us</h1>
+        <p class="lead">We'd love to hear from you. Fill out the form below or contact us directly.</p>
+    </div>
+</div>
+
+<!-- Contact Form Section -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2>Contact Us</h2>
+
+            <form asp-action="Contact" method="post">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Enter your message"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Info Section -->
+<div class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+            <h5>Our Address</h5>
+            <p>Cairo, Egypt</p>
+        </div>
+        <div class="col-md-4">
+            <i class="fas fa-phone fa-2x text-primary"></i>
+            <h5>Call Us</h5>
+            <p>+123 456 7890</p>
+        </div>
+        <div class="col-md-4">
+            <i class="fas fa-envelope fa-2x text-primary"></i>
+            <h5>Email Us</h5>
+            <p>info@campusentertainment.com</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}
+
+

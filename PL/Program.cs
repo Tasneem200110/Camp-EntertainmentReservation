@@ -7,6 +7,7 @@ using DAL.Data;
 using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 public class Program
 {
@@ -33,6 +34,11 @@ public class Program
         // Configure Cloudinary settings
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 
+        // Add authorization policies if needed
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+        });
         // Configure Identity
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
@@ -45,6 +51,8 @@ public class Program
         })
         .AddEntityFrameworkStores<MvcAppDbContext>()
         .AddDefaultTokenProviders();
+
+
 
         builder.Services.AddHttpContextAccessor();
         // Create a scope for database seeding

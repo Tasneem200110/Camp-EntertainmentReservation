@@ -4,9 +4,11 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PL.ViewModels;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PL.Controllers
 {
@@ -37,7 +39,7 @@ namespace PL.Controllers
                 UserId = userId;
                 //IdentityUser.Id;
             }
-
+            
             //------------------------------------------------------------for Admin----------------------------------------
             //var bookings = await _bookingRepository.GetAllBookingsAsync();
             var bookings = await _bookingRepository.GetBookingByUserIdAsync(UserId);
@@ -63,10 +65,9 @@ namespace PL.Controllers
             var camp = await _campRepository.GetById(campId);
             var bookingVM = new BookingViewModel
             {
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1),
-                CampID = campId,
-                //Camp = camp,
+                CampID = camp.CampID,
+                AvailabilityStartDate = camp.AvailabilityStartDate,
+                AvailabilityEndDate = camp.AvailabilityEndDate
             };
             return View(bookingVM);
         }
@@ -126,14 +127,14 @@ namespace PL.Controllers
 
                 var price = await _campRepository.GetPriceByCampId(booking.CampID);
                 var totalDays = (booking.EndDate - booking.StartDate).Days;
-                booking.TotalAmount = totalDays * price;
+                booking.TotalAmount = totalDays * price * bookingVM.NumberOfPeople;
 
 
                 await _bookingRepository.AddBookingAsync(booking);
                 Payment payment = new Payment
                 {
                     BookingID = booking.BookingId,
-                    Amount = totalDays * price,
+                    Amount = totalDays * price * bookingVM.NumberOfPeople,
                     PaymentDate = DateTime.Now,
                     PaymentMethod = bookingVM.PaymentMethod,
                     PaymentStatus = PaymentStatus.pending.ToString() // Assuming you're using PaymentStatus enum
@@ -150,43 +151,46 @@ namespace PL.Controllers
 
 
 
-        public async Task<IActionResult> Update(int id)
-        {
-            var booking = await _bookingRepository.GetBookingByIdAsync(id);
-            if (booking == null)
-            {
-                return NotFound();
-            }
-            return View(booking);
-        }
+        //public async Task<IActionResult> Update(int id)
+        //{
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, BookingViewModel bookingVM)
-        {
-            Booking booking = new Booking
-            {
-                BookingId = bookingVM.BookingId,
-                CampID = bookingVM.CampID,
-                UserID = UserId,
-                StartDate = bookingVM.StartDate,
-                EndDate = bookingVM.EndDate,
-                Status = bookingVM.Status,
-                TotalAmount = bookingVM.TotalAmount
+        //    var booking = await _bookingRepository.GetBookingByIdAsync(id);
+        //    var bookingVM = new BookingViewModel
+        //    {
+        //        CampID = booking.CampID,
+        //        AvailabilityStartDate = booking.camp.AvailabilityStartDate,
+        //        AvailabilityEndDate = booking.camp.AvailabilityEndDate
+        //    };
+        //    return View(bookingVM);
+        //}
 
-            };
-            if (id != booking.BookingId)
-            {
-                return BadRequest();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Update(int id, BookingViewModel bookingVM)
+        //{
+        //    Booking booking = new Booking
+        //    {
+        //        BookingId = bookingVM.BookingId,
+        //        CampID = bookingVM.CampID,
+        //        UserID = UserId,
+        //        StartDate = bookingVM.StartDate,
+        //        EndDate = bookingVM.EndDate,
+        //        Status = bookingVM.Status,
+        //        TotalAmount = bookingVM.TotalAmount
 
-            if (ModelState.IsValid)
-            {
-                await _bookingRepository.UpdateBookingAsync(booking);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(booking);
-        }
+        //    };
+        //    if (id != booking.BookingId)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        await _bookingRepository.UpdateBookingAsync(booking);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(booking);
+        //}
 
 
 
@@ -211,5 +215,30 @@ namespace PL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ConfirmBooking(int id)
+        {
+            // Retrieve the booking from the database
+            var booking = await _bookingRepository.GetBookingByIdAsync(id);
+
+            if (booking == null)
+            {
+                return NotFound(); // Return 404 if the booking is not found
+            }
+
+            // Check if the booking is already confirmed
+            if (booking.Status.Equals(BookingStatus.confirmed))
+            {
+                TempData["Message"] = "This booking is already confirmed.";
+                return RedirectToAction("Index"); // Redirect to the booking list
+            }
+
+            booking.Status = BookingStatus.confirmed;
+            await _bookingRepository.UpdateBookingAsync(booking);
+
+            TempData["Message"] = "Booking confirmed successfully."; // Set a success message
+            return RedirectToAction("Index"); // Redirect to the booking list
+        }
     }
 }

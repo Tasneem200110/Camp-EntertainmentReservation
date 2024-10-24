@@ -79,5 +79,14 @@ namespace PL.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> PaymentByBookingId(int BookingId)
+        {
+            // Fetch all payments from the repository
+            var payment = await _paymentRepository.GetPaymentByBookingId(BookingId);
+
+            // Return the view with the list of payments
+            return View(payment);
+        }
+
     }
 }

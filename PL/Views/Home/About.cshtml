@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewData["Title"] = "About";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Hero Section -->
+<div class="jumbotron jumbotron-fluid text-white bg-dark" style="background: url('/path/to/your/image.jpg') no-repeat center center; background-size: cover;">
+    <div class="container text-center">
+        <h1 class="display-4">About Us</h1>
+        <p class="lead">We make your bookings easy and hassle-free.</p>
+    </div>
+</div>
+
+<!-- Main Content Section -->
+<div class="container mt-5">
+    <!-- Introduction Section (Centered Text) -->
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2>Welcome to Our Platform</h2>
+            <p>
+                Our platform is designed to help you find and book venues, camps, and entertainment options for your events effortlessly. Whether you're planning a corporate event or a weekend retreat, we've got the perfect spaces for you.
+            </p>
+        </div>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h2>Our Mission</h2>
+            <p class="text-muted">
+                Our mission is to offer a seamless and user-friendly experience for individuals and organizations to book various venues and camps, ensuring a smooth reservation process from start to finish.
+            </p>
+        </div>
+    </div>
+
+    <!-- Why Choose Us Section -->
+    <div class="row mb-5 text-center">
+        <div class="col-md-3">
+            <i class="fas fa-check-circle fa-3x text-primary"></i>
+            <h4>Reliable Services</h4>
+            <p>We provide reliable booking services with a variety of venues for your needs.</p>
+        </div>
+        <div class="col-md-3">
+            <i class="fas fa-laptop fa-3x text-primary"></i>
+            <h4>Easy-to-Use Interface</h4>
+            <p>Our platform is designed with simplicity and ease-of-use in mind for a better experience.</p>
+        </div>
+        <div class="col-md-3">
+            <i class="fas fa-lock fa-3x text-primary"></i>
+            <h4>Secure Payments</h4>
+            <p>Quick and secure payment processing to ensure your bookings are safe.</p>
+        </div>
+        <div class="col-md-3">
+            <i class="fas fa-headset fa-3x text-primary"></i>
+            <h4>24/7 Support</h4>
+            <p>Our customer support team is here to help you around the clock.</p>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="row mb-5">
+        <div class="col-md-12 text-center">
+            <h3>Get in Touch</h3>
+            <p>We’re here to assist you with any questions or booking needs.</p>
+            <a asp-controller="Home" asp-action="Contact" class="btn btn-primary btn-lg">Contact Us</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}
+
+
+

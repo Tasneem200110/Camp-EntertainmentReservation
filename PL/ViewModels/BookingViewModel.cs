@@ -47,6 +47,14 @@ namespace PL.ViewModels
         public decimal Amount { get; set; }
 
         public PaymentStatus paymentStatus { get; set; }
+
+        [Required]
+        [Range(1, 100, ErrorMessage = "Please enter a number between 1 and 100")]
+        public int NumberOfPeople { get; set; }
+
+        public DateTime AvailabilityStartDate { get; set; }
+        public DateTime AvailabilityEndDate { get; set; }
+
     }
     
 }

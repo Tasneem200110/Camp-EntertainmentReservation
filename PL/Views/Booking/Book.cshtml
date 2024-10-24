@@ -25,14 +25,26 @@
         <div class="row mb-3">
             <div class="col">
                 <label asp-for="StartDate" class="form-label">Start Date</label>
-                <input asp-for="StartDate" class="form-control" type="date" required />
+                <input asp-for="StartDate" class="form-control" type="date"
+                       min="@Model.AvailabilityStartDate.ToString("yyyy-MM-dd")"
+                       max="@Model.AvailabilityEndDate.ToString("yyyy-MM-dd")"
+                       required />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             <div class="col">
                 <label asp-for="EndDate" class="form-label">End Date</label>
-                <input asp-for="EndDate" class="form-control" type="date" required />
+                <input asp-for="EndDate" class="form-control" type="date"
+                       min="@Model.AvailabilityStartDate.ToString("yyyy-MM-dd")"
+                       max="@Model.AvailabilityEndDate.ToString("yyyy-MM-dd")"
+                       required />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="NumberOfPeople" class="form-label">Number of People</label>
+            <input asp-for="NumberOfPeople" class="form-control" type="number" min="1" max="100" required />
+            <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">

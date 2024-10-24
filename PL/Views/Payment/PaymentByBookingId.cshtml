@@ -1,0 +1,55 @@
+﻿@model Payment
+@{
+    ViewData["Title"] = "PaymentByBookingId";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container mt-5">
+    <h2>Payment Details for Booking ID: @Model.BookingID</h2>
+
+    @if (Model != null)
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Payment ID</td>
+                    <td>@Model.PaymentID</td>
+                </tr>
+                <tr>
+                    <td>Booking ID</td>
+                    <td>@Model.BookingID</td>
+                </tr>
+                <tr>
+                    <td>Amount</td>
+                    <td>@Model.Amount.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td>Payment Method</td>
+                    <td>@Model.PaymentMethod</td>
+                </tr>
+                <tr>
+                    <td>Payment Date</td>
+                    <td>@Model.PaymentDate.ToString("yyyy-MM-dd")</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>@Model.PaymentStatus</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No payment found for this booking.</p>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary">Back to Payments</a>
+</div>
+

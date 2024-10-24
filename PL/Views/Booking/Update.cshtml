@@ -1,4 +1,4 @@
-﻿@model Booking
+﻿@* @model BookingViewModel
 @{
     ViewData["Title"] = "Update";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -10,32 +10,43 @@
     <form asp-action="Update" method="post">
         <input type="hidden" asp-for="BookingId" />
 
-        <div class="form-group mb-3">
-            <label asp-for="UserID" class="form-label">User ID</label>
-            <input asp-for="UserID" class="form-control" readonly />
+        <div class="row mb-3">
+            <div class="col">
+                <label asp-for="StartDate" class="form-label">Start Date</label>
+                <input asp-for="StartDate" class="form-control" type="date"
+                       min="@Model.AvailabilityStartDate.ToString("yyyy-MM-dd")"
+                       max="@Model.AvailabilityEndDate.ToString("yyyy-MM-dd")"
+                       required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="EndDate" class="form-label">End Date</label>
+                <input asp-for="EndDate" class="form-control" type="date"
+                       min="@Model.AvailabilityStartDate.ToString("yyyy-MM-dd")"
+                       max="@Model.AvailabilityEndDate.ToString("yyyy-MM-dd")"
+                       required />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="CampID" class="form-label">Camp ID</label>
-            <input asp-for="CampID" class="form-control" readonly />
+            <label asp-for="NumberOfPeople" class="form-label">Number of People</label>
+            <input asp-for="NumberOfPeople" class="form-control" type="number" min="1" max="100" required />
+            <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="StartDate" class="form-label">Start Date</label>
-            <input asp-for="StartDate" class="form-control" type="date" />
+            <label asp-for="PaymentMethod" class="control-label">Payment Method</label>
+            <select asp-for="PaymentMethod" class="form-control">
+                <option value="">Select Payment Method</option>
+                <option value="CreditCard">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="BankTransfer">Bank Transfer</option>
+            </select>
+            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
         </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="EndDate" class="form-label">End Date</label>
-            <input asp-for="EndDate" class="form-control" type="date" />
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="TotalAmount" class="form-label">Total Amount</label>
-            <input asp-for="TotalAmount" class="form-control" type="number" step="0.01" readonly/>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <br />
+        <button asp-asp-controller="Payment" asp-action=" ViewPayment" type="submit" class="btn btn-primary">Save Changes</button>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </form>
-</div>
+</div> *@
