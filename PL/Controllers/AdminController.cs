@@ -1,4 +1,5 @@
-﻿using BLL.Interfaces;
+﻿using BLL.Helpers;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PL.ViewModels;
@@ -11,33 +12,47 @@ namespace PL.Controllers
         private readonly ICampRepository _campRepository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IPaymentRepository _paymentRepository;
         //private readonly IPhotoUploadService _photoService;
         //private readonly IImageRepository _imageRepository;
 
-        public AdminController(ICampRepository campRepository, IBookingRepository bookingRepository, IUserRepository userRepository)
+        public AdminController(ICampRepository campRepository, IBookingRepository bookingRepository, IUserRepository userRepository, IPaymentRepository paymentRepository)
         {
             _campRepository = campRepository;
             _bookingRepository = bookingRepository;
             _userRepository = userRepository;
+            _paymentRepository = paymentRepository;
             //_addressRepository = addressRepository;
             //_photoService = photoService;
             //_imageRepository = imageRepository;
         }
         public async Task<IActionResult> Index()
         {
-            AdminDashboardViewModel dashboardVM = new AdminDashboardViewModel();
-            dashboardVM.CampsCount = await _campRepository.GetCampCount();
-            dashboardVM.BookingsCount = await _bookingRepository.GetBookingCount();
-            dashboardVM.UsersCount = await _userRepository.GetUsersCount();
-            dashboardVM.MonthBookingStatistics = await _bookingRepository.GetMonthStatistics();
+            //AdminDashboardViewModel dashboardVM = new AdminDashboardViewModel();
             
-            //v
-            // Prepare the model to send to the view
-            //var model = new
-            //{
-            //    WeekLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" }, // Labels for the weeks
-            //    //MonthBookingStatistics = weekCounts // Booking counts for each week
-            //};
+
+            AdminDashboardViewModel dashboardVM = new AdminDashboardViewModel
+            {
+                CampsCount = await _campRepository.GetCampCount(),
+
+                BookingsCount = await _bookingRepository.GetBookingCount(),
+                TodayBooking = await _bookingRepository.GetTodayBookingCount(),
+
+                UsersCount = await _userRepository.GetUsersCount(),
+                TodayNewUsers = await _userRepository.GetTodayNewUsers(),
+
+                MonthBookingStatistics = await _bookingRepository.GetMonthStatistics(),
+                WeeklyRevenue = await _paymentRepository.GetWeeklyRevenue(),
+
+                DailyBookingStatistics = await _bookingRepository.GetDailyStatistics(),
+                DailyRevenue = await _paymentRepository.GetDailyRevenue(),
+                DayLabels = DateHelper.GetUpcoming7DaysLabels(),
+
+                CampNames = await _campRepository.GetCampNames(),
+                CampBookings = await _campRepository.GetCampBookingsCount(),
+
+        };
+
 
 
 

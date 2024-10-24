@@ -37,7 +37,7 @@ namespace BLL.Repository
 
         public async Task<Camp> GetById(int id)
         {
-            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).FirstOrDefaultAsync(c => c.CampID == id);
+            return await _context.Camps.Include(c => c.Images).Include(a => a.Address).Include(b => b.Bookings).FirstOrDefaultAsync(c => c.CampID == id);
         }
 
         public async Task<Camp> GetByIdNoTracking(int id)
@@ -86,6 +86,21 @@ namespace BLL.Repository
         public async Task<int> GetCampCount()
         {
             return  await _context.Camps.CountAsync();
+        }
+
+        public async Task<List<string>> GetCampNames()
+        {
+            return _context.Camps
+                           .Select(c => c.CampName) 
+                           .ToList();
+        }
+
+        // Returns a list of booking counts for each camp
+        public async Task<List<int>> GetCampBookingsCount()
+        {
+            return _context.Camps
+                           .Select(c => c.Bookings.Count) 
+                           .ToList();
         }
     }
 }

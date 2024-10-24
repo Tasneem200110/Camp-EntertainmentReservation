@@ -67,7 +67,7 @@
                 <div class="dashboard-container">
 
                     <!-- Key Metrics -->
-                    <div class="row">
+                    <div class="row justify-content-center text-center">
                         <div class="col-md-3">
                             <div class="card text-white bg-primary">
                                 <div class="card-body">
@@ -80,7 +80,7 @@
                             <div class="card text-white bg-success">
                                 <div class="card-body">
                                     <h5 class="card-title">Total Bookings</h5>
-                                    <p class="card-text">@Model.BookingsCount</p>
+                                    <p class="card-text">@Model.BookingsCount Total Booking, @Model.TodayBooking Today</p>
                                 </div>
                             </div>
                         </div>
@@ -88,35 +88,39 @@
                             <div class="card text-white bg-info">
                                 <div class="card-body">
                                     <h5 class="card-title">Registered Users</h5>
-                                    <p class="card-text">@Model.UsersCount</p>
+                                    <p class="card-text">@Model.UsersCount Users, @Model.TodayNewUsers New Today</p>
                                 </div>
                             </div>
                         </div>
-
-                        <!--
-                        <div class="col-md-3">
-                            <div class="card text-white bg-warning">
-                                <div class="card-body">
-                                    <h5 class="card-title">Upcoming Camps</h5>
-                                    <p class="card-text">Camp XYZ, 10 spots left</p>
-                                </div>
-                            </div>
-                        </div>
-                        </div>-->
+                    </div>
 
                     <!-- Charts Section -->
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="card">
-                                <div class="card-header">Bookings Over Time</div>
+                                <div class="card-header text-center">Bookings Over 4 Weeks</div>
                                 <div class="card-body">
                                     <canvas id="bookingsChart"></canvas>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
                             <div class="card">
-                                <div class="card-header">Popular Camps</div>
+                                <div class="card-header text-center">Revenue of 4 Weeks</div>
+                                <div class="card-body">
+                                    <canvas id="weeklyRevenue"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header text-center">Camps Bookings</div>
                                 <div class="card-body">
                                     <canvas id="popularCampsChart"></canvas>
                                 </div>
@@ -124,24 +128,9 @@
                         </div>
                     </div>
 
-                    <!-- Recent Activities -->
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-header">Recent Activities</div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li>John Doe booked Camp XYZ on Oct 21</li>
-                                        <li>Jane Doe canceled her booking for Camp ABC on Oct 20</li>
-                                        <li>Mike Ross registered on Oct 19</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </main>
+
         </div>
     </div>
 
@@ -151,43 +140,117 @@
 
     <!-- Chart.js script -->
     <script>
-        // var ctx = document.getElementById('bookingsChart').getContext('2d');
-        // var bookingsChart = new Chart(ctx, {
-        //     type: 'line',
-        //     data: {
-        //         labels: ['Oct 1', 'Oct 5', 'Oct 10', 'Oct 15', 'Oct 20'],
-        //         datasets: [{
-        //             label: 'Bookings',
-        //             data: [10, 25, 15, 30, 45],
-        //             backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        //             borderColor: 'rgba(54, 162, 235, 1)',
-        //             borderWidth: 1
-        //         }]
-        //     }
-        // });
 
         var ctx = document.getElementById('bookingsChart').getContext('2d');
         var bookingsChart = new Chart(ctx, {
-            type: 'line', // or 'bar', depending on your preference
+            type: 'bar', // Set the initial type to 'bar'
             data: {
                 labels: @Html.Raw(Json.Serialize(Model.WeekLabels)), // Pass the week labels
-                datasets: [{
-                    label: 'Bookings',
-                    data: @Html.Raw(Json.Serialize(Model.MonthBookingStatistics)), // Pass the booking data
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [
+                    {
+                        label: 'Bookings (Bar)', // Bar dataset label
+                        data: @Html.Raw(Json.Serialize(Model.MonthBookingStatistics)), // Booking counts
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ], // You can add more colors based on the number of camps
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1,
+                        type: 'bar', // Specify the dataset type as bar
+                    },
+                    {
+                        label: 'Bookings (Line)', // Line dataset label
+                        data: @Html.Raw(Json.Serialize(Model.MonthBookingStatistics)), // Same data for trend
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: false, // Do not fill under the line
+                        type: 'line', // Specify the dataset type as line
+                    }
+                ]
             },
             options: {
-                    responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true, // Start y-axis at zero
+                        title: {
+                            display: true,
+                            text: 'Number of Bookings' // Title for the y-axis
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Weeks' // Title for the x-axis
                         }
                     }
-                });
+                }
+            }
+        });
+
+        var ctx = document.getElementById('weeklyRevenue').getContext('2d');
+        var weeklyRevenue = new Chart(ctx, {
+            type: 'bar', // Set the initial type to 'bar'
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.WeekLabels)), // Pass the week labels
+                datasets: [
+                    {
+                        label: 'Bookings (Bar)', // Bar dataset label
+                        data: @Html.Raw(Json.Serialize(Model.WeeklyRevenue)), // Booking counts
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)'
+                        ], // You can add more colors based on the number of camps
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1,
+                        type: 'bar', // Specify the dataset type as bar
+                    },
+                    {
+                        label: 'Bookings (Line)', // Line dataset label
+                        data: @Html.Raw(Json.Serialize(Model.WeeklyRevenue)), // Same data for trend
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: false, // Do not fill under the line
+                        type: 'line', // Specify the dataset type as line
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true, // Start y-axis at zero
+                        title: {
+                            display: true,
+                            text: 'Weeks Revenue' // Title for the y-axis
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Weeks' // Title for the x-axis
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 
@@ -195,16 +258,37 @@
         var popularCampsChart = new Chart(ctx2, {
             type: 'bar',
             data: {
-                labels: ['Camp A', 'Camp B', 'Camp C', 'Camp D'],
+                labels: @Html.Raw(Json.Serialize(Model.CampNames)), // Dynamically pass camp names from C# to JavaScript
                 datasets: [{
                     label: 'Bookings',
-                    data: [20, 50, 30, 40],
-                    backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)'],
-                    borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)'],
+                    data: @Html.Raw(Json.Serialize(Model.CampBookings)), // Dynamically pass booking counts
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)'
+                    ], // You can add more colors based on the number of camps
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
                     borderWidth: 1
                 }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
         });
+
+
+
     </script>
 
     <canvas id="bookingsChart"></canvas>

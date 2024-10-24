@@ -12,6 +12,7 @@ namespace BLL.Interfaces
         Task Update(User user);
         Task DeleteUser(int UserId);
         Task<int> GetUsersCount();
+        Task<int> GetTodayNewUsers();
         public int? GetUserId();
     }
 }

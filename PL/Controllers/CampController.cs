@@ -110,7 +110,7 @@ namespace PL.Controllers
         public async Task<IActionResult> Create(CreateCampViewModel campVM)
         {
             int errorCount = ModelState.Values.Sum(v => v.Errors.Count);
-            string ImageUrl;
+            //string ImageUrl;
             List<string> imagesrc = new List<string>();
             bool modelNotValid = errorCount > 1;       //if the error is less than 2 then model is valid
 
@@ -130,7 +130,7 @@ namespace PL.Controllers
                     CampName = campVM.CampName,
                     Description = campVM.Description,
                     CampCategory = campVM.CampCategory,
-                    //Image = campVM.ImageUrl,
+                    Image = imagesrc[0],
                     PricePerNight = campVM.PricePerNight,
                     AvailabilityStartDate = campVM.AvailabilityStartDate,
                     AvailabilityEndDate = campVM.AvailabilityEndDate
