@@ -70,6 +70,13 @@ namespace BLL.Repository
             //_context.Users.
             return await _context.Users.CountAsync();
         }
+        public async Task<int> GetTodayNewUsers()
+        {
+            var today = DateTime.Now.Date; // Gets today's date without the time
+            return await _context.Users
+                                 .Where(u => u.DateOfCreation.Date == today) // Assuming CreatedDate exists
+                                 .CountAsync();
+        }
         public int? GetUserId()
         {
             var userIdString = _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);

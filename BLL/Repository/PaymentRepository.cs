@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CloudinaryDotNet;
+using BLL.Helpers;
 
 namespace BLL.Repository
 {
@@ -71,9 +72,10 @@ namespace BLL.Repository
             return await _context.Payments.Where(p => p.PaymentStatus == status).ToListAsync();
         }
 
-        public Task<IEnumerable<Payment>> GetPaymentsByUserAsync(int userId)
+        public async Task<IEnumerable<Payment>> GetPaymentsByUserAsync(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Payments.Where(p => p.Booking.UserID == userId).ToListAsync();
+            //throw new NotImplementedException();
         }
 
         public Task<string> GetPaymentStatusAsync(int paymentId)
@@ -106,6 +108,45 @@ namespace BLL.Repository
 
             }
             return existPayment;
+        }
+
+        public async Task<List<decimal>> GetWeeklyRevenue()
+        {
+            var currentDate = DateTime.Now;
+            var startOfCurrentWeek = DateHelper.StartOfWeek(currentDate);
+            var revenueCounts = new List<decimal>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                var startOfWeek = startOfCurrentWeek.AddDays(i * 7);
+                var endOfWeek = startOfWeek.AddDays(7);
+
+                var revenue = await _context.Payments
+                    .Where(p => p.Booking.StartDate >= startOfWeek && p.Booking.StartDate < endOfWeek)
+                    .SumAsync(p => p.Amount); // Assuming Amount is the revenue field
+
+                revenueCounts.Add(revenue);
+            }
+            return revenueCounts;
+        }
+
+        public async Task<List<decimal>> GetDailyRevenue()
+        {
+            var currentDate = DateTime.Now;
+            var dailyRevenueCounts = new List<decimal>();
+
+            // Loop through the next 7 days
+            for (int i = 0; i < 7; i++)
+            {
+                var currentDay = currentDate.AddDays(i);
+                var revenue = await _context.Payments
+                    .Where(p => p.Booking.StartDate.Date == currentDay.Date) // Match the date exactly
+                    .SumAsync(p => p.Amount); // Assuming Amount is the revenue field
+
+                dailyRevenueCounts.Add(revenue);
+            }
+
+            return dailyRevenueCounts;
         }
 
     }

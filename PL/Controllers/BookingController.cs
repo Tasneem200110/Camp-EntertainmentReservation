@@ -33,6 +33,7 @@ namespace PL.Controllers
         public async Task<IActionResult> Index()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            IEnumerable<Booking> bookings;
 
             int.TryParse(userIdString, out int userId);
             {
@@ -41,8 +42,14 @@ namespace PL.Controllers
             }
             
             //------------------------------------------------------------for Admin----------------------------------------
-            //var bookings = await _bookingRepository.GetAllBookingsAsync();
-            var bookings = await _bookingRepository.GetBookingByUserIdAsync(UserId);
+            if (User.IsInRole("Admin"))
+            {
+                bookings = await _bookingRepository.GetAllBookingsAsync();
+            }
+            else
+            {
+                bookings = await _bookingRepository.GetBookingByUserIdAsync(UserId);
+            }
             return View(bookings);
         }
 

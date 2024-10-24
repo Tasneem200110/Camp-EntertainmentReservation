@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace BLL.Interfaces
         Task<decimal> GetTotalPaymentAmountForUserAsync(int userId);
         Task<Payment> CancelPaymentAsync(int id);
         Task<Payment> GetPaymentByBookingId(int BookingId);
+
+        Task<List<decimal>> GetWeeklyRevenue();
+        Task<List<decimal>> GetDailyRevenue();
+
+
 
     }
 }

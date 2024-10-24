@@ -12,6 +12,8 @@ namespace BLL.Interfaces
         Task<IEnumerable<Camp>> GetCampByCity(string city);
         Task<IEnumerable<Camp>> GetCampByDistrict(string district);
         Task<int> GetCampCount();
+        Task<List<string>> GetCampNames();
+        Task<List<int>> GetCampBookingsCount();
 
         Task<decimal> GetPriceByCampId(int campId);
 

@@ -8,10 +8,41 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
+using Microsoft.Extensions.Hosting;
 
 public class Program
 {
-    public static void Main(string[] args)
+    
+
+    public static async Task SeedRolesAndAdminUserAsync(RoleManager<IdentityRole<int>> roleManager, UserManager<User> userManager)
+    {
+        // Create the Admin role
+        var adminRole = "Admin";
+        var roleExists = await roleManager.RoleExistsAsync(adminRole);
+        if (!roleExists)
+        {
+            await roleManager.CreateAsync(new IdentityRole<int>(adminRole));
+        }
+
+        // Create an admin user
+        var adminEmail = "admin@gmail.com"; // Change this to your desired email
+        var adminPassword = "Admin@123"; // Set a secure password
+
+        var userExists = await userManager.FindByEmailAsync(adminEmail);
+        if (userExists == null)
+        {
+            var adminUser = new User { UserName = adminEmail, Email = adminEmail };
+            var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+            if (result.Succeeded)
+            {
+                // Assign the admin role to the user
+                await userManager.AddToRoleAsync(adminUser, adminRole);
+            }
+        }
+    }
+
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +65,6 @@ public class Program
         // Configure Cloudinary settings
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 
-        // Add authorization policies if needed
-        builder.Services.AddAuthorization(options =>
-        {
-            options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-        });
         // Configure Identity
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
@@ -49,10 +75,9 @@ public class Program
             options.Password.RequireNonAlphanumeric = false;
             options.User.RequireUniqueEmail = true;  // Ensure Email is unique
         })
+            .AddRoles<IdentityRole<int>>()
         .AddEntityFrameworkStores<MvcAppDbContext>()
         .AddDefaultTokenProviders();
-
-
 
         builder.Services.AddHttpContextAccessor();
         // Create a scope for database seeding
@@ -88,6 +113,18 @@ public class Program
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
+            var userManager = services.GetRequiredService<UserManager<User>>();
+
+            await SeedRolesAndAdminUserAsync(roleManager, userManager); // Seed roles and admin user
+            //await SeedRolesAsync(roleManager); // Ensure roles are created
+        }
+
+        
         app.Run();
     }
 }

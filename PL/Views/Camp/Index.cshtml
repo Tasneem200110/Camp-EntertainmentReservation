@@ -65,8 +65,11 @@
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <div class="btn-group">
                                 <a asp-controller="camp" asp-action="Detail" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary">View</a>
+                                @if (User.IsInRole("Admin"))
+                                {
                                 <a asp-controller="camp" asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-secondary">Edit</a>
                                 <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-campid="@item.CampID">Delete</button>
+                                }
                             </div>
                             <small class="text-muted">@item.CampCategory</small>
                         </div>

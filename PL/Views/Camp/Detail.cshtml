@@ -22,8 +22,14 @@
                         <div>
                             <span class="badge badge-info mr-3">@Model.PricePerNight</span>
                         </div>
-
-                        <a asp-controller="Booking" asp-action="Book" asp-route-campId="@Model.CampID" class="btn btn-lg btn-success mt-3">Book Now</a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Booking" asp-action="Book" asp-route-campId="@Model.CampID" class="btn btn-lg btn-success mt-3">Book Now</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" asp-route-campId="@Model.CampID" class="btn btn-lg btn-success mt-3">Book Now</a>
+                        }
                     </div>
                 </div>
             </div>
