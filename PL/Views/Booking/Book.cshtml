@@ -30,7 +30,7 @@
                 {
                     foreach (var user in ViewBag.Users as IEnumerable<DAL.Entities.User>)
                     {
-                        <option value="@user.UserID">@user.UserID</option>
+                        <option value="@user.Id">@user.Id</option>
                     }
                 }
             </select>

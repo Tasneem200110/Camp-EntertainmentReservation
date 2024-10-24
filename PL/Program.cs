@@ -28,7 +28,7 @@ public class Program
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-        builder.Services.AddScoped<IPhotoService, PhotoService>();
+        builder.Services.AddScoped<IPhotoUploadService, PhotoUploadService>();
         // Configure Cloudinary settings
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
 

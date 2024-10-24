@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class AddAllEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,12 +66,7 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                } );
-            migrationBuilder.CreateIndex(
-                   name: "IX_AspNetUsers_UserName",
-                   table: "AspNetUsers",
-                   column: "UserName",
-                   unique: false);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Camps",
@@ -211,12 +205,12 @@ namespace DAL.Migrations
                 {
                     BookingId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     UserID = table.Column<int>(type: "int", nullable: false),
                     CampID = table.Column<int>(type: "int", nullable: false),
-                    PaymentId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -233,6 +227,31 @@ namespace DAL.Migrations
                         principalTable: "Camps",
                         principalColumn: "CampID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Source = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CampId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Images_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Images_Camps_CampId",
+                        column: x => x.CampId,
+                        principalTable: "Camps",
+                        principalColumn: "CampID");
                 });
 
             migrationBuilder.CreateTable(
@@ -298,9 +317,16 @@ namespace DAL.Migrations
                 filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserName",
+                table: "AspNetUsers",
+                column: "UserName");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
-                column: "NormalizedUserName");
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_CampID",
@@ -316,6 +342,16 @@ namespace DAL.Migrations
                 name: "IX_Camps_AddressId",
                 table: "Camps",
                 column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_CampId",
+                table: "Images",
+                column: "CampId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Images_UserId",
+                table: "Images",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_BookingID",
@@ -341,6 +377,9 @@ namespace DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Payments");

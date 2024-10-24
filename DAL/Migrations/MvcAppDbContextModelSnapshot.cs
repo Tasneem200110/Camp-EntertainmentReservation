@@ -53,18 +53,17 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"));
 
-                    b.Property<DateTime>("BookingDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("CampID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18, 2)");
@@ -122,6 +121,33 @@ namespace DAL.Migrations
                     b.HasIndex("AddressId");
 
                     b.ToTable("Camps");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CampId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("DAL.Entities.Payment", b =>
@@ -225,7 +251,11 @@ namespace DAL.Migrations
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
-                        .HasDatabaseName("UserNameIndex");
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UserName");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -391,6 +421,21 @@ namespace DAL.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("DAL.Entities.Image", b =>
+                {
+                    b.HasOne("DAL.Entities.Camp", "Camp")
+                        .WithMany("Images")
+                        .HasForeignKey("CampId");
+
+                    b.HasOne("DAL.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Camp");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DAL.Entities.Payment", b =>
                 {
                     b.HasOne("DAL.Entities.Booking", "Booking")
@@ -462,6 +507,8 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entities.Camp", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
