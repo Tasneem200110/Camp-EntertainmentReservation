@@ -1,11 +1,13 @@
 ﻿using BLL.Helpers;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PL.ViewModels;
 
 namespace PL.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         //private readonly IAddressRepository _addressRepository;

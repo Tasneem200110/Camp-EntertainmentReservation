@@ -5,6 +5,8 @@ using System.Net.Mail;
 using System.Net;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PL.ViewModels;
+using DAL.Entities;
+using System.Security.Claims;
 
 namespace PL.Controllers
 {
@@ -14,6 +16,7 @@ namespace PL.Controllers
         private readonly IBookingRepository _bookingRepository;
         private readonly ICampRepository _campRepository;
         private readonly IUserRepository _userRepository;
+        private int UserId;
 
         public PaymentController(ICampRepository campRepository, IPaymentRepository paymentRepository, 
                                 IBookingRepository bookingRepository, IUserRepository userRepository)
@@ -26,9 +29,22 @@ namespace PL.Controllers
         // GET: Payment/Index
         public async Task<IActionResult> Index()
         {
-            // Fetch all payments from the repository
-            var payments = await _paymentRepository.GetAllPaymentsAsync();
+            IEnumerable<Payment> payments;
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            int.TryParse(userIdString, out int userId);
+            {
+                UserId = userId;
+                //IdentityUser.Id;
+            }
+            if (User.IsInRole("Admin"))
+            {
+                payments = await _paymentRepository.GetAllPaymentsAsync();
+            }
+            else
+            {
+                payments = await _paymentRepository.GetPaymentsByUserAsync(UserId);
+            }
             // Return the view with the list of payments
             return View(payments);
         }

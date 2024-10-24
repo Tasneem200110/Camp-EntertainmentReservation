@@ -72,9 +72,10 @@ namespace BLL.Repository
             return await _context.Payments.Where(p => p.PaymentStatus == status).ToListAsync();
         }
 
-        public Task<IEnumerable<Payment>> GetPaymentsByUserAsync(int userId)
+        public async Task<IEnumerable<Payment>> GetPaymentsByUserAsync(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Payments.Where(p => p.Booking.UserID == userId).ToListAsync();
+            //throw new NotImplementedException();
         }
 
         public Task<string> GetPaymentStatusAsync(int paymentId)
