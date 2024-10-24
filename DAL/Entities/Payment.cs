@@ -9,7 +9,7 @@ namespace DAL.Entities
         [Required][DataType(DataType.Date)] public DateTime PaymentDate { get; set; }
 
         [Required]
-        [RegularExpression(@"^(CreditCard|PayPal|BankTransfer)$",
+        [RegularExpression(@"^(CreditCard|PayPal|BankTransfer|Cash)$",
             ErrorMessage = "Payment method must be CreditCard, PayPal, or BankTransfer.")]
         public string PaymentMethod { get; set; } // Allowed values: "CreditCard", "PayPal", "BankTransfer"
 

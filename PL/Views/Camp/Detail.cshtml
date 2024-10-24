@@ -4,74 +4,121 @@
 *@
 @{
 }
-
 <div class="main-container">
-    <section class="bg-white space-sm">
+    <section class="bg-gradient p-5 rounded shadow">
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-lg-7 mb-4 mb-sm-0">
-                    <img alt="Image" src="@Model.Image" class="rounded img-fluid"/>
+                    <img alt="Image" src="@Model.Image" class="rounded img-fluid shadow-sm" />
                 </div>
                 <!--end of col-->
-                <div class="col-lg-4 d-flex flex-column justify-content-between mr-auto ml-auto">
+                <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div>
-                        <h1 class="mb-2">@Model.CampName</h1>
-                        <h2 class="lead mb-3">@Model.Address.City, @Model.Address.Government</h2>
+                        <h1 class="mb-2 font-weight-bold text-primary">@Model.CampName</h1>
+                        <h2 class="lead mb-3 text-secondary">@Model.Address.City, @Model.Address.Government</h2>
                         <div>
-                            <!--=====================-->
-                            <span class="badge badge-secondary mr-3">@Model.CampCategory</span>
+                            <span class="badge badge-info mr-3">@Model.CampCategory</span>
                         </div>
 
-                        <!--
-                        <a asp-controller="camp" asp-action="Edit" asp-route-id="@Model.CampID" type="button" class="btn btn-sm btn-outline-secondary">Book</a>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <a class="nav-link" asp-controller="Booking" asp-action="Index">Bookings</a>
-                        -->
-                        <h2 class="lead mb-3">@Model.CampID</h2>
-                        <a  asp-controller="Booking" asp-action="Book" asp-route-campId="@Model.CampID" class="btn btn-primary mt-3">Book</a>
-                    </div>                   
+                        <a asp-controller="Booking" asp-action="Book" asp-route-campId="@Model.CampID" class="btn btn-lg btn-success mt-3">Book Now</a>
+                    </div>
                 </div>
             </div>
-            <!--end of col-->
+            <!--end of row-->
         </div>
-        <!--end of row-->
+        <!--end of container-->
+    </section>
+    <!--end of section-->
+
+    <section class="space-sm mt-4">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-8 col-lg-7">
+                    <h5 class="mb-4 font-weight-bold text-dark">Adventure Overview</h5>
+                    <article class="lead text-dark">
+                        @Model.Description
+                    </article>
+                    <hr>
+                </div>
+                <!--end of col-->
+                <div class="col-12 col-md-4">
+                    <div class="card shadow-sm">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div><i class="icon-calendar mr-1"></i> Available Start Date</div>
+                                <span class="badge badge-success">@Model.AvailabilityStartDate</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div><i class="icon-calendar mr-1"></i> Available End Date</div>
+                                <span class="badge badge-danger">@Model.AvailabilityEndDate</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--end of col-->
+            </div>
+            <!--end of row-->
+        </div>
+        <!--end of container-->
     </section>
 </div>
-<!--end of container-->
-<!--end of section-->
-<section class="space-sm">
-    <div class="container">
-        <div class="row justify-content-between">
-            <div class="col-12 col-md-8 col-lg-7">
-                <h5 class="mb-4">Adventure Overview</h5>
-                <article>
-                    @Model.Description
-                </article>
-                <hr>
-            </div>
-            <!--end of col-->
-            <div class="col-12 col-md-4">
-                <div class="card">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="d-flex justify-content-between">
-                                <div><i class="icon-text-document mr-1"></i> Available Start Date</div>
-                                <span>@Model.AvailabilityStartDate</span>
-                            </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="d-flex justify-content-between">
-                                <div><i class="icon-edit mr-1"></i> Available End Data</div>
-                                <span>@Model.AvailabilityEndDate</span>
-                            </div>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-            <!--end of col-->
-        </div>
-        <!--end of row-->
-    </div>
-    <!--end of container-->
-</section>
+<!--end of main-container-->
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(to right, #007bff, #6f42c1); /* Gradient background */
+        color: #fff; /* Ensure text is visible against gradient */
+    }
+
+    .shadow {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow for elevation */
+    }
+
+    .font-weight-bold {
+        font-weight: 700; /* Bold text for emphasis */
+    }
+
+    .text-primary {
+        color: #ffffff; /* White text for primary elements */
+    }
+
+    .text-secondary {
+        color: #f8f9fa; /* Light color for secondary text */
+    }
+
+    .text-dark {
+        color: #343a40; /* Dark text color */
+    }
+
+    .badge-info {
+        background-color: #17a2b8; /* Custom badge color */
+    }
+
+    .badge-success {
+        background-color: #28a745; /* Success badge color */
+    }
+
+    .badge-danger {
+        background-color: #dc3545; /* Danger badge color */
+    }
+
+    .lead {
+        font-size: 1.25rem; /* Increased font size for better readability */
+    }
+
+    /* Hover effect for buttons */
+    .btn {
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .btn:hover {
+            background-color: #218838; /* Darker shade for hover */
+            transform: scale(1.05); /* Slightly larger on hover */
+        }
+
+    /* Card hover effect */
+    .card:hover {
+        transform: translateY(-5px); /* Lift card on hover */
+        transition: transform 0.3s ease;
+    }
+</style>

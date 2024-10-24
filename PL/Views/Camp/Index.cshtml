@@ -6,75 +6,76 @@
 *@
 @{
 }
-<div class="album py-5 bg-light">
-    <div class="container">
-        <form method="get">
-            <div class="row">
-                <div class="form-group col">
-                    <h6>Camp Category</h6>
-                    <select asp-for="SelectedCategory" class="form-control">
-                        @foreach (var item in Model.Categories)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </select>
-                </div>
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4">Find Your Perfect Camp</h1>
+        <p class="lead">Explore our diverse range of camps available for booking!</p>
+    </div>
 
-                <div class="form-group col">
-                    <label >Government</label>
-                    <select asp-for="SelectedGovernment" class="form-control">
-                        @foreach (var item in Model.Governments)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="form-group col">
-                    <label>City</label>
-                    <select asp-for="SelectedCity" class="form-control">
-                        @foreach (var item in Model.Cities)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </select>
-                </div>
+    <form method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md">
+                <h6>Camp Category</h6>
+                <select asp-for="SelectedCategory" class="form-select">
+                    <option value="">Select Category</option>
+                    @foreach (var item in Model.Categories)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
             </div>
 
-            <div class="text-end">
-                <!-- Aligns the button to the right -->
-                <button type="submit" class="btn btn-primary mb-2">Filter</button>
+            <div class="col-md">
+                <h6>Government</h6>
+                <select asp-for="SelectedGovernment" class="form-select">
+                    <option value="">Select Government</option>
+                    @foreach (var item in Model.Governments)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
             </div>
-        </form>
 
-        <div class="row">
-            @foreach (var item in Model.Camps)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
+            <div class="col-md">
+                <h6>City</h6>
+                <select asp-for="SelectedCity" class="form-select">
+                    <option value="">Select City</option>
+                    @foreach (var item in Model.Cities)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </div>
+        </div>
 
-                        
-                        <img class="card-img-top" src="@item.Images.FirstOrDefault()?.Source" width="100%" height="225" alt="Card image cap">
-                        <div class="card-body d-flex flex-column">
-                            <p class="card-text">@item.CampName</p>
-                            <p class="card-text text-muted truncate" style="flex-grow: 1;">@item.Description</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a asp-controller="camp" asp-action="Detail" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">View</a>
-                                    <a asp-controller="camp" asp-action="Edit" asp-route-id="@item.CampID" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-campid="@item.CampID">
-                                        Delete
-                                    </button>
-                                </div>
-                                <small class="text-muted">@item.CampCategory</small>
+        <div class="text-end mt-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+
+    <div class="row">
+        @foreach (var item in Model.Camps)
+        {
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <img class="card-img-top" src="@item.Images.FirstOrDefault()?.Source" alt="@item.CampName">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-dark">@item.CampName</h5>
+                        <p class="card-text text-muted truncate" style="flex-grow: 1;">@item.Description</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="btn-group">
+                                <a asp-controller="camp" asp-action="Detail" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-primary">View</a>
+                                <a asp-controller="camp" asp-action="Edit" asp-route-id="@item.CampID" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#deleteModal" data-campid="@item.CampID">Delete</button>
                             </div>
+                            <small class="text-muted">@item.CampCategory</small>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
-
+            </div>
+        }
     </div>
+
 </div>
 
 <style>
@@ -84,6 +85,20 @@
         -webkit-line-clamp: 2; /* Number of lines to show */
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .form-select {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
     }
 </style>
 
@@ -110,20 +125,15 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
-        $(document).ready(function() {
-            // When the delete button is clicked, set the camp ID to the form's hidden input
-            $('#deleteModal').on('show.bs.modal', function(event) {
+        $(document).ready(function () {
+            $('#deleteModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var campId = button.data('campid');  // Extract camp ID from data-* attribute
                 var modal = $(this);
-                // Check if campId is set correctly
-                if (campId) {
-                    modal.find('#campId').val(campId); // Set the camp ID in the hidden input field
-                } else {
-                    console.log("Camp ID not found!");
-                }
+                modal.find('#campId').val(campId); // Set the camp ID in the hidden input field
             });
         });
     </script>

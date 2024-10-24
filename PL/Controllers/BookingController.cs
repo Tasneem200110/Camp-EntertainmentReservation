@@ -1,4 +1,5 @@
 ﻿using BLL.Interfaces;
+using BLL.Repository;
 using DAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,12 +14,15 @@ namespace PL.Controllers
         private readonly IBookingRepository _bookingRepository;
         private readonly ICampRepository _campRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IPaymentRepository _paymentRpository;
 
-        public BookingController(IBookingRepository bookingRepository, ICampRepository CampRepository, IUserRepository userRepository) 
+        public BookingController(IBookingRepository bookingRepository, ICampRepository CampRepository,
+                                IUserRepository userRepository, IPaymentRepository paymentRepository) 
         { 
             _bookingRepository = bookingRepository;
             _campRepository = CampRepository;
             _userRepository = userRepository;
+            _paymentRpository = paymentRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -91,14 +95,24 @@ namespace PL.Controllers
                     TotalAmount = bookingVM.TotalAmount
 
                 };
+
                 var price = await _campRepository.GetPriceByCampId(booking.CampID);
                 var totalDays = (booking.EndDate - booking.StartDate).Days;
                 booking.TotalAmount = totalDays * price;
 
 
                 await _bookingRepository.AddBookingAsync(booking);
-                return RedirectToAction("Index");
-                
+                Payment payment = new Payment
+                {
+                    BookingID = booking.BookingId,
+                    Amount = totalDays * price,
+                    PaymentDate = DateTime.Now,
+                    PaymentMethod = bookingVM.PaymentMethod,
+                    PaymentStatus = PaymentStatus.pending.ToString() // Assuming you're using PaymentStatus enum
+                };
+                await _paymentRpository.AddPaymentAsync(payment);
+                return RedirectToAction("ViewPayment", "Payment", new { bookingId = booking.BookingId });
+
             }
 
             // Redirect to Index page after successful booking

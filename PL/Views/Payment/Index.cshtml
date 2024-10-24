@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Payment>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <h2>All Payments</h2>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Payment ID</th>
+                <th>Booking ID</th>
+                <th>Amount</th>
+                <th>Payment Date</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var payment in Model)
+            {
+                <tr>
+                    <td>@payment.PaymentID</td>
+                    <td>@payment.BookingID</td>
+                    <td>@payment.Amount.ToString("C")</td>
+                    <td>@payment.PaymentDate.ToString("yyyy-MM-dd")</td>
+                    <td>@payment.PaymentMethod</td>
+                    <td>@payment.PaymentStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" asp-controller="Booking" class="btn btn-primary">Back to Bookings</a>
+</div>
+

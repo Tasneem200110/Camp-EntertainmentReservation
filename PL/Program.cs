@@ -25,6 +25,7 @@ public class Program
         builder.Services.AddScoped<IImageRepository, ImageRepository>();
         builder.Services.Configure<CloudinarySetting>(builder.Configuration.GetSection("CloudinarySettings"));
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
 
         var app = builder.Build();

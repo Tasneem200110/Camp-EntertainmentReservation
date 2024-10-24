@@ -22,5 +22,7 @@ namespace BLL.Interfaces
         Task<Payment> ProcessRefundAsync(int paymentId);
         Task<decimal> GetTotalPaymentAmountForUserAsync(int userId);
         Task<Payment> CancelPaymentAsync(int id);
+        Task<Payment> GetPaymentByBookingId(int BookingId);
+
     }
 }

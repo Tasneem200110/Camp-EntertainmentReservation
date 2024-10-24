@@ -5,6 +5,11 @@ using static DAL.Entities.Booking;
 
 namespace PL.ViewModels
 {
+    public enum PaymentStatus
+    {
+        pending,
+        completed
+    }
     public class BookingViewModel
     {
         public int BookingId { get; set; }
@@ -29,6 +34,19 @@ namespace PL.ViewModels
 
         [Required]
         public BookingStatus Status { get; set; }
+        public int PaymentID { get; set; }
+
+        [Required][DataType(DataType.Date)] public DateTime PaymentDate { get; set; }
+
+        [Required]
+        [RegularExpression(@"^(CreditCard|PayPal|BankTransfer)$",
+            ErrorMessage = "Payment method must be CreditCard, PayPal, or BankTransfer.")]
+        public string PaymentMethod { get; set; } // Allowed values: "CreditCard", "PayPal", "BankTransfer"
+        [Required]
+        [Range(0, double.MaxValue, ErrorMessage = "Payment amount must be non-negative.")]
+        public decimal Amount { get; set; }
+
+        public PaymentStatus paymentStatus { get; set; }
     }
     
 }

@@ -1,0 +1,68 @@
+﻿@model Payment
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Payment Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Payment ID:</dt>
+                <dd class="col-sm-9 font-weight-bold">@Model.PaymentID</dd>
+
+                <dt class="col-sm-3">Amount:</dt>
+                <dd class="col-sm-9 text-success font-weight-bold">@Model.Amount.ToString("C")</dd>
+
+                <dt class="col-sm-3">Payment Date:</dt>
+                <dd class="col-sm-9">@Model.PaymentDate.ToString("yyyy-MM-dd")</dd>
+
+                <dt class="col-sm-3">Payment Method:</dt>
+                <dd class="col-sm-9">@Model.PaymentMethod</dd>
+
+                <dt class="col-sm-3">Payment Status</dt>
+                <dd class="col-sm-9">@Model.PaymentStatus</dd>
+            </dl>
+
+            <div class="text-center mt-4">
+                <form asp-action="Confirm" asp-controller="Payment" method="post">
+                    <input type="hidden" name="paymentId" value="@Model.PaymentID" />
+                    <button type="submit" class="btn btn-primary btn-lg">Confirm</button>
+                    <a asp-action="Index" class="btn btn-secondary btn-lg ml-2">Back to List</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: 1px solid #007bff; /* Change to your theme color */
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    .card-body {
+        background-color: #f8f9fa; /* Light background */
+    }
+
+    dt {
+        font-weight: bold;
+    }
+
+    dd {
+        margin-bottom: 1rem; /* Add some spacing between items */
+    }
+
+    .text-success {
+        color: #28a745; /* Green color for completed status */
+    }
+
+    .text-danger {
+        color: #dc3545; /* Red color for not completed status */
+    }
+</style>
+
+
+
