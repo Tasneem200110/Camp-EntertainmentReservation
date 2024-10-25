@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Booking>
+﻿@model BookingListViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -14,7 +14,51 @@
     <h2>Bookings List</h2>
     <p class="lead">View and manage your bookings below.</p>
 
-    @if (Model.Any())
+    
+    <form method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md">
+                <h6>Camp Name</h6>
+                <select asp-for="SelectedCampName" class="form-select">
+                    <option value="">All Camps</option>
+                    @foreach (var item in Model.CampNames)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md">
+                <h6>Booking Status</h6>
+                <select asp-for="SelectedStatus" class="form-select">
+                    @foreach (var item in Model.BookingStatus)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </div>
+
+            
+            <div class="col-md">
+                <h6>Time</h6>
+                <select asp-for="PastOrUpcoming" class="form-select">
+                    <option value="All">All</option>
+                    <option value="past">Past Bookings</option>
+                    <option value="ongoing">Ongoing Bookings</option>
+                    <option value="upcoming">Upcoming Bookings</option>
+                    
+                </select>
+            </div>
+            
+        </div>
+
+        <div class="text-end mt-3">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+    
+
+    @if (Model.Bookings.Any())
     {
         <table class="table table-bordered table-striped">
             <thead>
@@ -29,7 +73,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var booking in Model)
+                @foreach (var booking in Model.Bookings)
                 {
                     <tr>
                         <td>@booking.camp.CampName</td>

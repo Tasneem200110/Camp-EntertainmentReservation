@@ -67,9 +67,23 @@ namespace PL.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             Camp camp = await _campRepository.GetById(id);
+            var campVM = new CreateCampViewModel
+            {
+                CampID = camp.CampID,
+                CampName = camp.CampName,
+                CampCategory = camp.CampCategory,
+                Description = camp.Description,
+                PricePerNight = camp.PricePerNight,
+                Address = camp.Address,
+                AvailabilityStartDate = camp.AvailabilityStartDate,
+                AvailabilityEndDate = camp.AvailabilityEndDate,
+                Images = camp.Images,
+                
+
+            };
             var img = await _imageRepository.GetCampFirstImage(id);
-            camp.Image = img.Source;
-            return View(camp);
+            campVM.ImageUrl = img.Source;
+            return View(campVM);
         }
 
         public async Task<IActionResult> Create()

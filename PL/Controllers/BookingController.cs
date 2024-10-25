@@ -9,6 +9,9 @@ using Microsoft.Extensions.Options;
 using PL.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using BLL.Services;
+using static Azure.Core.HttpHeader;
+using DAL.Data.Enum;
 
 namespace PL.Controllers
 {
@@ -30,18 +33,15 @@ namespace PL.Controllers
             _paymentRpository = paymentRepository;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SelectedCampName, string SelectedStatus, string pastOrUpcoming)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            IEnumerable<Booking> bookings;
-
             int.TryParse(userIdString, out int userId);
             {
                 UserId = userId;
-                //IdentityUser.Id;
             }
-            
-            //------------------------------------------------------------for Admin----------------------------------------
+
+            IEnumerable<Booking> bookings;
             if (User.IsInRole("Admin"))
             {
                 bookings = await _bookingRepository.GetAllBookingsAsync();
@@ -50,7 +50,34 @@ namespace PL.Controllers
             {
                 bookings = await _bookingRepository.GetBookingByUserIdAsync(UserId);
             }
-            return View(bookings);
+
+            if (SelectedCampName != null && SelectedCampName != "All Camps")
+            {
+                bookings = BookingService.GetBookingByCampName(SelectedCampName, bookings);
+            }
+
+            if (!string.IsNullOrEmpty(SelectedStatus) && SelectedStatus != "All")
+            {
+                bookings = BookingService.GetBookingByStatus(SelectedStatus, bookings);
+            }
+
+            if (!string.IsNullOrEmpty(pastOrUpcoming) && pastOrUpcoming != "All")
+            {
+                bookings = BookingService.GetBookingsByTime(pastOrUpcoming, bookings);
+            }
+
+            var ListVM = new BookingListViewModel
+            {
+                Bookings = bookings,
+                CampNames = await _campRepository.GetCampNames(),
+                BookingStatus = new[] { "All" }.Concat(Enum.GetValues(typeof(BookingStatus)).Cast<BookingStatus>().Select(c => c.ToString())),
+                SelectedCampName = SelectedCampName,
+                SelectedStatus = SelectedStatus,
+                PastOrUpcoming = pastOrUpcoming,
+            };
+
+            
+            return View(ListVM);
         }
 
         public async Task<IActionResult> Details(int id)

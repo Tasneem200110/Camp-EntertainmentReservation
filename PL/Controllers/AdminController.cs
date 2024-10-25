@@ -29,10 +29,7 @@ namespace PL.Controllers
             //_imageRepository = imageRepository;
         }
         public async Task<IActionResult> Index()
-        {
-            //AdminDashboardViewModel dashboardVM = new AdminDashboardViewModel();
-            
-
+        {   
             AdminDashboardViewModel dashboardVM = new AdminDashboardViewModel
             {
                 CampsCount = await _campRepository.GetCampCount(),
@@ -53,12 +50,14 @@ namespace PL.Controllers
                 CampNames = await _campRepository.GetCampNames(),
                 CampBookings = await _campRepository.GetCampBookingsCount(),
 
-        };
-
-
-
-
+            };
             return View(dashboardVM);
+        }
+
+        public async Task<IActionResult> Users()
+        {
+            var users = await _userRepository.GetUsers();
+            return View(users);
         }
     }
 }

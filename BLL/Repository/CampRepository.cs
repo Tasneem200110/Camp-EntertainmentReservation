@@ -102,5 +102,6 @@ namespace BLL.Repository
                            .Select(c => c.Bookings.Count) 
                            .ToList();
         }
+
     }
 }

@@ -12,7 +12,22 @@ using Microsoft.Extensions.Hosting;
 
 public class Program
 {
-    
+    public static async Task SeedRolesAsync(RoleManager<IdentityRole<int>> roleManager)
+    {
+        // Define role names
+        string[] roleNames = { "Admin", "User" };
+
+        foreach (var roleName in roleNames)
+        {
+            // Check if the role exists
+            var roleExist = await roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                // Create the role if it doesn't exist
+                await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+            }
+        }
+    }
 
     public static async Task SeedRolesAndAdminUserAsync(RoleManager<IdentityRole<int>> roleManager, UserManager<User> userManager)
     {
@@ -74,10 +89,13 @@ public class Program
             options.Password.RequiredLength = 3;
             options.Password.RequireNonAlphanumeric = false;
             options.User.RequireUniqueEmail = true;  // Ensure Email is unique
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
         })
             .AddRoles<IdentityRole<int>>()
         .AddEntityFrameworkStores<MvcAppDbContext>()
         .AddDefaultTokenProviders();
+
+
 
         builder.Services.AddHttpContextAccessor();
         // Create a scope for database seeding
@@ -119,6 +137,7 @@ public class Program
             var services = scope.ServiceProvider;
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
             var userManager = services.GetRequiredService<UserManager<User>>();
+            await SeedRolesAsync(roleManager);
 
             await SeedRolesAndAdminUserAsync(roleManager, userManager); // Seed roles and admin user
             //await SeedRolesAsync(roleManager); // Ensure roles are created

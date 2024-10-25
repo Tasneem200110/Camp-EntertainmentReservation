@@ -1,0 +1,59 @@
+﻿@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="container mt-5">
+    <h2>Bookings List</h2>
+    <p class="lead">View and manage your bookings below.</p>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>User Email</th>
+                    <th>Account Date of Creation</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.DateOfCreation</td>
+                        
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+   
+</div>
+<style>
+    .btn-group .btn {
+        transition: background-color 0.1s, color 0.3s;
+    }
+
+    .btn-group .btn:hover {
+        background-color: #ff5733; /* Customize hover color */
+        color: white;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+</style>
+
+
