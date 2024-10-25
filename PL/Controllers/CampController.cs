@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PL.Controllers
 {
+    [Authorize]
     public class CampController : Controller
     {
         private readonly IAddressRepository _addressRepository;
@@ -228,10 +229,11 @@ namespace PL.Controllers
             var camp = await _campRepository.GetByIdNoTracking(id);
             if (camp != null)
             {
-               
+                List<string> imagesrc = new List<string>();
+
                 if (campVM.ImagesUrls != null)
                 {
-                    var imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
+                    imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
                     foreach (var src in imagesrc)
                     {
                         var image = new Image
@@ -273,7 +275,7 @@ namespace PL.Controllers
                     CampID = id,
                     CampName = campVM.CampName,
                     Description = campVM.Description,
-                    //Image = campVM.ImageUrl,
+                    //Image = imagesrc[0],
                     Address = campVM.Address,
                     AddressId = campVM.AddressId,
                     CampCategory = campVM.CampCategory,

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PL.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly UserManager<User> _userManager;

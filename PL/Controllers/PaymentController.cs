@@ -7,9 +7,11 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using PL.ViewModels;
 using DAL.Entities;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PL.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentRepository _paymentRepository;

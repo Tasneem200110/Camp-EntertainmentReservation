@@ -15,7 +15,7 @@ using DAL.Data.Enum;
 
 namespace PL.Controllers
 {
-
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly IBookingRepository _bookingRepository;
