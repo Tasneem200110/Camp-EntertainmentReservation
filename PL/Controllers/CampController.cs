@@ -6,6 +6,7 @@ using PL.ViewModels;
 using BLL.Services;
 using DAL.Data.Enum;
 using BLL.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PL.Controllers
 {
@@ -29,10 +30,8 @@ namespace PL.Controllers
 
         public async Task<IActionResult> Index(string selectedCategory, string selectedGovernment, string selectedCity, string selectedDistrict)
         {
-            // Get all camps
             IEnumerable<Camp> camps = await _campRepository.GetAll();
 
-            // Apply filters if any are selected
             if (selectedCategory != null && selectedCategory != "All Categories")
             {
                 camps = CampServices.GetCampByCategory(selectedCategory, camps);
@@ -86,6 +85,7 @@ namespace PL.Controllers
             return View(campVM);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var addresses = await _addressRepository.GetAll();
@@ -119,25 +119,19 @@ namespace PL.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCampViewModel campVM)
         {
             int errorCount = ModelState.Values.Sum(v => v.Errors.Count);
-            //string ImageUrl;
             List<string> imagesrc = new List<string>();
             bool modelNotValid = errorCount > 1;       //if the error is less than 2 then model is valid
 
             if (!modelNotValid)
             {
                 
-                //ImageUrl = await _photoService.AddPhoto(campVM.Image, campImageDefaultFlag);
+                imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
 
-                //if (campVM.ImagesUrls == null)
-                //{
-                    imagesrc = await _photoService.AddPhotos(campVM.ImagesUrls, campImageDefaultFlag);
-
-                //}
 
                 var camp = new Camp
                 {
@@ -184,19 +178,8 @@ namespace PL.Controllers
 
                     _imageRepository.Add(image);
 
-                    //_imageRepository.Add(image1);
-                    //await _photoService.DeletePhoto(campVM.FirstImageSrc);
                 }
 
-                //var image = new Image
-                //{
-                //    Source = ImageUrl,
-                //    CampId = camp.CampID 
-                //};
-
-                //camp.Images.Add(image);
-
-                //_imageRepository.Add(image);
 
                 return RedirectToAction("Index");
             }
@@ -206,6 +189,7 @@ namespace PL.Controllers
             return View(campVM);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var addresses = await _addressRepository.GetAll();
@@ -230,6 +214,7 @@ namespace PL.Controllers
             return View(campVM);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit( EditCampViewModel campVM)
         {
@@ -258,7 +243,6 @@ namespace PL.Controllers
                         campVM.Images.Add(image);
 
                         _imageRepository.Add(image);
-                        //await _photoService.DeletePhoto(campVM.FirstImageSrc);
                     }
                     
                 }
@@ -308,7 +292,7 @@ namespace PL.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -319,7 +303,7 @@ namespace PL.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteImage(int imageId, EditCampViewModel campVM)
         {
             var image = await _imageRepository.GetById(imageId);

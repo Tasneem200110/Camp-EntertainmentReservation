@@ -185,50 +185,6 @@ namespace PL.Controllers
 
 
 
-        //public async Task<IActionResult> Update(int id)
-        //{
-
-        //    var booking = await _bookingRepository.GetBookingByIdAsync(id);
-        //    var bookingVM = new BookingViewModel
-        //    {
-        //        CampID = booking.CampID,
-        //        AvailabilityStartDate = booking.camp.AvailabilityStartDate,
-        //        AvailabilityEndDate = booking.camp.AvailabilityEndDate
-        //    };
-        //    return View(bookingVM);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Update(int id, BookingViewModel bookingVM)
-        //{
-        //    Booking booking = new Booking
-        //    {
-        //        BookingId = bookingVM.BookingId,
-        //        CampID = bookingVM.CampID,
-        //        UserID = UserId,
-        //        StartDate = bookingVM.StartDate,
-        //        EndDate = bookingVM.EndDate,
-        //        Status = bookingVM.Status,
-        //        TotalAmount = bookingVM.TotalAmount
-
-        //    };
-        //    if (id != booking.BookingId)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        await _bookingRepository.UpdateBookingAsync(booking);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(booking);
-        //}
-
-
-
-
         public async Task<IActionResult> Delete(int id)
         {
             var booking = await _bookingRepository.GetBookingByIdAsync(id);
