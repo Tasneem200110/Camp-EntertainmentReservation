@@ -41,10 +41,10 @@ namespace PL.Controllers
                     return View(model);
                 }
 
-                // Create a new user
+                // Create a new user without enforcing uniqueness on UserName
                 var user = new User
                 {
-                    UserName = model.UserName, // No uniqueness check for username
+                    UserName = model.UserName, // Accepts spaces and no uniqueness check
                     Email = model.Email,
                 };
 
@@ -63,9 +63,9 @@ namespace PL.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Login()

@@ -17,15 +17,17 @@ namespace PL.Controllers
         private readonly ICampRepository _campRepository;
         private readonly IPhotoUploadService _photoService;
         private readonly IImageRepository _imageRepository;
+        private readonly IBookingRepository _bookingRepository;
         private readonly bool campImageDefaultFlag = false;
 
         public CampController(ICampRepository campRepository, IAddressRepository addressRepository,
-            IPhotoUploadService photoService, IImageRepository imageRepository)
+            IPhotoUploadService photoService, IImageRepository imageRepository, IBookingRepository bookingRepository)
         {
             _campRepository = campRepository;
             _addressRepository = addressRepository;
             _photoService = photoService;
             _imageRepository = imageRepository;
+            _bookingRepository = bookingRepository;
         }
 
 
@@ -301,6 +303,13 @@ namespace PL.Controllers
             var campDetails = await _campRepository.GetById(id);
             if (campDetails == null)
                 return View("Error");
+
+            var hasBookings = await _bookingRepository.GetBookingByCampIdAsync(id); // Assumes you have a method to check bookings
+            if (hasBookings.Any())
+            {
+                TempData["ErrorMessage"] = "This camp has bookings and cannot be deleted.";
+                return RedirectToAction("Index");
+            }
             _campRepository.Delete(campDetails);
             return RedirectToAction("Index");
         }

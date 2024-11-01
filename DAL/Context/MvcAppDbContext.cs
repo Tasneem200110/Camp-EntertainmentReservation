@@ -74,6 +74,9 @@ namespace DAL.Context
                 .WithOne(i => i.Camp)
                 .HasForeignKey(i => i.CampId);
 
+            modelBuilder.Entity<User>()
+                        .HasIndex(u => u.UserName)
+                        .IsUnique(false);
             // Uncomment if you want to establish a one-to-one relationship with User and Image
             // modelBuilder.Entity<User>()
             //     .HasOne(u => u.Image)

@@ -83,15 +83,16 @@ public class Program
         // Configure Identity
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
-            options.Password.RequireLowercase = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequireDigit = false;
-            options.Password.RequiredLength = 3;
-            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 10;
+            options.Password.RequireNonAlphanumeric = true;
             options.User.RequireUniqueEmail = true;  // Ensure Email is unique
-            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+            // Allow spaces in UserName
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 _";
         })
-            .AddRoles<IdentityRole<int>>()
+        .AddRoles<IdentityRole<int>>()
         .AddEntityFrameworkStores<MvcAppDbContext>()
         .AddDefaultTokenProviders();
 

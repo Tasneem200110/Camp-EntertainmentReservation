@@ -68,10 +68,7 @@ namespace BLL.Repository
 
         public async Task<IEnumerable<Booking>> GetBookingByCampIdAsync(int CampId)
         {
-            return await _context.Bookings
-                .Include(b => b.CampID == CampId)
-                .Include(b => b.User)
-                .ToListAsync();
+            return await _context.Bookings.Where(c => c.CampID == CampId).ToListAsync();
         }
 
         public async Task<Booking> GetBookingByIdAsync(int BookingId)

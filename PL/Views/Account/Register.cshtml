@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "Register";
 }
-
 <style>
+    /* Styles for the container and form elements */
     .video-container video {
         position: fixed;
         top: 0;
@@ -12,55 +12,66 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        z-index: 1; /* Set video behind the form */
+        z-index: 1;
     }
 
     .register-container {
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%); /* Center the form */
-        width: 95%; /* Responsive width */
-        max-width: 600px; /* Reduced max width for smaller form */
-        z-index: 2; /* Set above video */
+        transform: translate(-50%, -50%);
+        width: 95%;
+        max-width: 600px;
+        z-index: 2;
     }
 
     form {
         background-color: rgba(191, 191, 191, 0.5);
-        padding: 30px; /* Reduced padding */
-        border-radius: 50px; /* Adjusted border radius */
+        padding: 30px;
+        border-radius: 50px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         border: 1px solid #804132;
-        font-size: 16px; /* Adjusted font size */
-        color: #232323; /* Changed text color */
+        font-size: 16px;
+        color: #232323;
         margin: 0;
     }
 
-        form h2 {
-            text-align: center !important;
-            margin-bottom: 20px !important; /* Reduced bottom margin */
-            color: #863928 !important;
-            text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
-        }
+    form h2 {
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        color: #863928 !important;
+        text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+    }
 
     .form-group {
-        margin-bottom: 15px; /* Reduced margin */
+        margin-bottom: 15px;
+        position: relative; /* To position the eye icon inside the input */
     }
 
     form input,
     form select {
         width: 100%;
-        padding: 12px; /* Adjusted padding */
-        margin-bottom: 10px; /* Reduced margin */
+        padding: 12px;
+        margin-bottom: 10px;
         border: 1px solid #b4b2b2;
-        border-radius: 50px; /* Adjusted border radius */
-        font-size: 14px; /* Adjusted font size */
+        border-radius: 50px;
+        font-size: 14px;
         color: #232323;
+    }
+
+    /* Position the eye icon inside the input field */
+    .toggle-password {
+        position: absolute;
+        right: 15px; /* Adjust right distance */
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d; /* Icon color */
     }
 
     .req {
         color: #000000 !important;
-        font-size: 12px !important; /* Adjusted font size */
+        font-size: 12px !important;
         font-weight: bold !important;
     }
 
@@ -71,14 +82,14 @@
         background-color: #863928;
         color: #fff;
         border: none;
-        border-radius: 50px; /* Adjusted border radius */
+        border-radius: 50px;
         cursor: pointer;
         font-size: 16px;
     }
 
-        button:hover {
-            background-color: #a56d3c;
-        }
+    button:hover {
+        background-color: #a56d3c;
+    }
 
     .more {
         margin-top: 10px;
@@ -121,13 +132,17 @@
         </div>
 
         <div class="form-group">
-            <input asp-for="Password" placeholder="Password" type="password" class="form-control" />
+            <input asp-for="Password" placeholder="Password" type="password" class="form-control" id="password" />
             <span asp-validation-for="Password" class="req text-danger"></span>
+            <!-- Eye icon for toggling password visibility -->
+            <span toggle="#password" class="fa fa-fw fa-eye toggle-password" onclick="togglePasswordVisibility('password')"></span>
         </div>
 
         <div class="form-group">
-            <input asp-for="ConfirmPassword" placeholder="Confirm Password" type="password" class="form-control" />
+            <input asp-for="ConfirmPassword" placeholder="Confirm Password" type="password" class="form-control" id="confirmPassword" />
             <span asp-validation-for="ConfirmPassword" class="req text-danger"></span>
+            <!-- Eye icon for toggling confirm password visibility -->
+            <span toggle="#confirmPassword" class="fa fa-fw fa-eye toggle-password" onclick="togglePasswordVisibility('confirmPassword')"></span>
         </div>
 
         <button type="submit">Register</button>
@@ -139,3 +154,26 @@
         </div>
     </form>
 </div>
+
+<!-- Add FontAwesome for icons if not already included -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+    // JavaScript function to toggle the password visibility
+    function togglePasswordVisibility(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>
+
+
